@@ -1,0 +1,12 @@
+[submodule "VoxelEngine/vendor/glfw"]
+	path = VoxelEngine/vendor/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "VoxelEngine/vendor/stb"]
+	path = VoxelEngine/vendor/stb
+	url = https://github.com/nothings/stb.git
+[submodule "VoxelEngine/vendor/glm"]
+	path = VoxelEngine/vendor/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "VoxelEngine/vendor/spdlog"]
+	path = VoxelEngine/vendor/spdlog
+	url = https://github.com/gabime/spdlog.git
