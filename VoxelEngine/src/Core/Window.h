@@ -23,6 +23,8 @@ namespace Voxel
 
 		void SetVSync(bool vsync);
 		bool GetVSync() const { return data.vsync; }
+
+		GLFWwindow* Get() { return window; }
 	private:
 		GLFWwindow* window;
 

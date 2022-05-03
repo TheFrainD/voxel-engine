@@ -21,7 +21,9 @@ namespace Voxel
 			for (auto&& callback : _callbacks.at(event->GetType()))
 			{
 				if (!event->IsHandled())
+				{
 					callback(event);
+				}
 			}
 		}
 

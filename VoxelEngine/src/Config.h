@@ -18,7 +18,7 @@
 #if !defined(VE_DEBUG) && defined(VE_PLATFORM_WINDOWS)
 #define MAIN int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow)
 #else
-int main(int argc, char** argv)
+#define MAIN int main(int argc, char** argv)
 #endif
 
 // Macro functions

@@ -46,7 +46,7 @@ namespace Voxel
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        // Create windoww
+        // Create window
         window = glfwCreateWindow(data.width, data.height, data.title.c_str(), nullptr, nullptr);
         VE_ASSERT(window != nullptr, "Failed to create window!");
 

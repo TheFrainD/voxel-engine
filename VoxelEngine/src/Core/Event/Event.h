@@ -28,7 +28,7 @@ namespace Voxel
 		bool IsHandled() const { return handled; }
 		void SetHandled() { handled = true; }
 	private:
-		bool handled;
+		bool handled = false;
 	};
 
 	using EventCallback = std::function<void(const Event* event)>;
@@ -40,7 +40,7 @@ namespace Voxel
 		static void Subscribe(const EventCallback& callback)
 		{
 			static_assert(std::is_base_of<Event, E>::value == true, "Subscribable object must derive from Event");
-			_callbacks[E::StaticType()].push_back(std::move(callback));
+			_callbacks[E::StaticType()].push_back(callback);
 		}
 
 		static void Post(Event* event);
