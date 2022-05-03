@@ -2,6 +2,7 @@
 
 // Headers
 #include <Config.h>
+
 #include <string>
 
 // Forward declaration

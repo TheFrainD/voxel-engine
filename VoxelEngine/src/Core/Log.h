@@ -2,7 +2,9 @@
 
 // Headers
 #include <Config.h>
+
 #include <memory>
+
 #include <spdlog/spdlog.h>
 
 namespace Voxel

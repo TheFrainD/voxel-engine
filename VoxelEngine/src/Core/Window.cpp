@@ -65,6 +65,8 @@ namespace Voxel
             data->width = width;
             data->height = height;
 
+            glViewport(0, 0, width, height);
+
             EventBus::Post(new WindowResizeEvent(width, height));
         });
     }
