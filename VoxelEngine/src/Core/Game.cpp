@@ -8,6 +8,7 @@
 #include <Core/Input.h>
 #include <Core/Event/Event.h>
 #include <Core/Event/WindowEvent.h>
+#include <Utils/ResourceManager.h>
 
 #include <memory>
 #include <functional>
@@ -48,6 +49,8 @@ namespace Voxel
 		}
 
 		Destroy();
+
+		Utils::ResourceManager::Clean();
 	}
 
 	void Game::Close()

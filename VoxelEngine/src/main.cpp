@@ -6,11 +6,10 @@
 #include <Core/Event/InputEvent.h>
 #include <Graphics/Shader.h>
 #include <Graphics/Texture.h>
+#include <Graphics/Buffer.h>
+#include <Graphics/VertexArray.h>
 
 #include <glad/glad.h>
-
-GLuint vao;
-GLuint vbo;
 
 float vertices[] = {
 	-1.0f,-1.0f, 0.0f, 0.0f, 1.0f,
@@ -23,6 +22,9 @@ float vertices[] = {
 };
 
 using namespace Voxel;
+
+VertexArray vertexArray;
+VertexBuffer vertexBuffer;
 
 Shader shader;
 Texture texture;
@@ -43,7 +45,7 @@ public:
 	virtual void Start() override
 	{
 		EventBus::Subscribe<KeyPressedEvent>([this](const Event* event) {
-				if (EVENT(KeyPressedEvent)->GetKey() == Key::Space)
+				if (EVENT(KeyPressedEvent)->GetKey() == Key::Escape)
 				{
 					this->Close();
 				}
@@ -52,29 +54,23 @@ public:
 		shader.Load("data/shaders/test.vert", "data/shaders/test.frag");
 		texture.Load("data/textures/mario.jpg");
 
-		glGenVertexArrays(1, &vao);
-		glGenBuffers(1, &vbo);
+		vertexArray.Create();
+		vertexBuffer.Create(vertices, sizeof(vertices));
+		std::vector<BufferElement> bufferElements{
 
-		glBindVertexArray(vao);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-		// position
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(0));
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(1);
-
-		glBindVertexArray(0);
+		};
+		vertexBuffer.SetLayout(BufferLayout({
+				BufferElement(ShaderDataType::Float3, "position"),
+				BufferElement(ShaderDataType::Float2, "uv")
+			}));
+		vertexArray.AddVertexBuffer(vertexBuffer);
 
 		glClearColor(148.0f / 255, 148.0f / 255, 143.0f / 255, 1.0);
 	}
 
 	virtual void Update(float deltaTime) override
 	{
-		if (Input::IsKeyPressed(Key::Escape))
-		{
-			this->Close();
-		}
+
 	}
 
 	virtual void Render() override
@@ -83,9 +79,9 @@ public:
 
 		shader.Use();
 		texture.Bind();
-		glBindVertexArray(vao);
+		vertexArray.Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glBindVertexArray(0);
+		vertexArray.Unbind();
 	}
 
 	virtual void Destroy() override
