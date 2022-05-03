@@ -5,6 +5,8 @@
 #include <Config.h>
 #include <Core/Log.h>
 #include <Core/Window.h>
+#include <Core/Event/Event.h>
+#include <Core/Event/WindowEvent.h>
 
 #include <memory>
 #include <functional>
@@ -14,7 +16,14 @@ namespace Voxel
 
 	Game::Game()
 	{
+		Log::Init("log");
 		running = true;
+
+		EventBus::Subscribe<WindowCloseEvent>([this](const Event* event)
+			{
+				VE_LOG_INFO("Window closed!");
+				this->Close();
+			});
 	}
 
 	Game::~Game()
@@ -26,7 +35,6 @@ namespace Voxel
 	{
 		Start();
 
-		Log::Init("log");
 		window = std::unique_ptr<Window>(new Window(width, height, title));
 
 		while (running)

@@ -5,6 +5,8 @@
 #include <Config.h>
 #include <Core/Assert.h>
 #include <Core/Log.h>
+#include <Core/Event/Event.h>
+#include <Core/Event/WindowEvent.h>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -36,7 +38,7 @@ namespace Voxel
     {
         // Init GLFW
         int success = glfwInit();
-        VE_ASSERT(success = GLFW_TRUE, "Failed to initialize GLFW!");
+        VE_ASSERT(success == GLFW_TRUE, "Failed to initialize GLFW!");
         glfwSetErrorCallback(glfw_error_callback);
 
         // Configure GLFW context
@@ -63,6 +65,7 @@ namespace Voxel
             data->width = width;
             data->height = height;
 
+            EventBus::Post(new WindowResizeEvent(width, height));
         });
     }
 
@@ -76,6 +79,11 @@ namespace Voxel
     {
         glfwPollEvents();
         glfwSwapBuffers(window);
+
+        if (glfwWindowShouldClose(window))
+        {
+            EventBus::Post(new WindowCloseEvent());
+        }
     }
 
     void Window::SetVSync(bool vsync)

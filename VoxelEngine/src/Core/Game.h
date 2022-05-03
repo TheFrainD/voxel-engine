@@ -6,8 +6,6 @@
 
 #include <memory>
 
-int main(int argc, char** argv);
-
 namespace Voxel 
 {
 
@@ -27,8 +25,6 @@ namespace Voxel
 	private:
 		std::unique_ptr<Window> window;
 		bool running;
-
-		friend int ::main(int, char**);
 	};
 
 } // namespace Voxel

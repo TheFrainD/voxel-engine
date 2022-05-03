@@ -1,4 +1,5 @@
 #include <vepch.h>
+#include <Config.h>
 #include <Core/Game.h>
 
 class VoxelEngine : public Voxel::Game
@@ -35,7 +36,8 @@ public:
 	}
 };
 
-int main(int argc, char** argv) {
+MAIN()
+{
 	VoxelEngine* engine = new VoxelEngine();
 	engine->Run(1280, 720, "VoxelEngine");
 	delete engine;

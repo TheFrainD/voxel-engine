@@ -12,9 +12,9 @@ namespace Voxel
 	{
 	public:
 		static void Init(const char* filename);
-		inline static std::shared_ptr<spdlog::logger>& GetLogger() { return logger; }
+		inline static std::shared_ptr<spdlog::logger>& GetLogger() { return _logger; }
 	private:
-		static std::shared_ptr<spdlog::logger> logger;
+		static std::shared_ptr<spdlog::logger> _logger;
 	};
 
 // Log macros

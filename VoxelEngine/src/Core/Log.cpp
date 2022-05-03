@@ -15,7 +15,7 @@
 namespace Voxel
 {
 
-	std::shared_ptr<spdlog::logger> Log::logger;
+	std::shared_ptr<spdlog::logger> Log::_logger;
 
 	void Log::Init(const char* filename)
 	{
@@ -26,8 +26,8 @@ namespace Voxel
 		sinks.push_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename, true));
 		sinks.at(1)->set_level(spdlog::level::trace);
 
-		logger = std::make_shared<spdlog::logger>("VoxelEngine Logger", begin(sinks), end(sinks));
-		logger->set_pattern("%^[%X] %l: %v%$");
+		_logger = std::make_shared<spdlog::logger>("VoxelEngine Logger", begin(sinks), end(sinks));
+		_logger->set_pattern("%^[%X] %l: %v%$");
 	}
 
 } // namepsace 
