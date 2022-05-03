@@ -1,8 +1,13 @@
 #include <vepch.h>
 #include <Config.h>
 #include <Core/Game.h>
+#include <Core/Input.h>
+#include <Core/Event/Event.h>
+#include <Core/Event/InputEvent.h>
 
-class VoxelEngine : public Voxel::Game
+using namespace Voxel;
+
+class VoxelEngine : public Game
 {
 public:
 	VoxelEngine()
@@ -17,12 +22,20 @@ public:
 
 	virtual void Start() override
 	{
-
+		EventBus::Subscribe<KeyPressedEvent>([this](const Event* event) {
+				if (EVENT(KeyPressedEvent)->GetKey() == Key::Space)
+				{
+					this->Close();
+				}
+			});
 	}
 
 	virtual void Update(float deltaTime) override
 	{
-
+		if (Input::IsKeyPressed(Key::Escape))
+		{
+			this->Close();
+		}
 	}
 
 	virtual void Render() override
@@ -36,7 +49,7 @@ public:
 	}
 };
 
-MAIN()
+MAIN
 {
 	VoxelEngine* engine = new VoxelEngine();
 	engine->Run(1280, 720, "VoxelEngine");

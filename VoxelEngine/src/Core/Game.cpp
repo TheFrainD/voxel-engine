@@ -5,6 +5,7 @@
 #include <Config.h>
 #include <Core/Log.h>
 #include <Core/Window.h>
+#include <Core/Input.h>
 #include <Core/Event/Event.h>
 #include <Core/Event/WindowEvent.h>
 
@@ -33,9 +34,10 @@ namespace Voxel
 
 	void Game::Run(Uint32 width, Uint32 height, const char* title)
 	{
-		Start();
-
 		window = std::unique_ptr<Window>(new Window(width, height, title));
+		Input::Init(window->Get());
+
+		Start();
 
 		while (running)
 		{
