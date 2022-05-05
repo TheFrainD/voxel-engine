@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace Voxel
 {
@@ -111,16 +112,21 @@ namespace Voxel
 	class VertexBuffer : public Utils::Resource
 	{
 	public:
-		void Create(Uint32 size);
-		void Create(const float* data, Uint32 size);
+		VertexBuffer(Uint32 size);
+		VertexBuffer(const float* data, Uint32 size);
 
-		virtual const BufferLayout& GetLayout() const { return layout; }
-		virtual void SetLayout(const BufferLayout& layout) { this->layout = layout; }
+		const BufferLayout& GetLayout() const { return layout; }
+		void SetLayout(const BufferLayout& layout) { this->layout = layout; }
+
+		void SetData(const void* data, Uint32 size);
 
 		void Bind() const;
 		void Unbind() const;
 
 		void Destroy() override;
+
+		static std::shared_ptr<VertexBuffer> Create(Uint32 size);
+		static std::shared_ptr<VertexBuffer> Create(const float* data, Uint32 size);
 	private:
 		Uint32 buffer;
 		BufferLayout layout;
@@ -129,7 +135,7 @@ namespace Voxel
 	class ElementBuffer : public Utils::Resource
 	{
 	public:
-		void Create(Uint32* elements, Uint32 count);
+		ElementBuffer(Uint32* elements, Uint32 count);
 
 		void Bind() const;
 		void Unbind() const;
@@ -137,6 +143,8 @@ namespace Voxel
 		Uint32 GetCount() const { return count; }
 
 		void Destroy() override;
+
+		static std::shared_ptr<ElementBuffer> Create(Uint32* elements, Uint32 count);
 	private:
 		Uint32 buffer;
 		Uint32 count;

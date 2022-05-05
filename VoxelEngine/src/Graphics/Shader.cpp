@@ -8,6 +8,7 @@
 #include <Utils/ResourceManager.h>
 
 #include <string>
+#include <memory>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -101,7 +102,7 @@ static GLuint CreateProgram(GLuint vertexShader, GLuint fragmentShader)
 namespace Voxel
 {
 
-	void Shader::Load(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
+	Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
 	{
 		std::string vertexShaderSource_str = Utils::ReadFile(vertexShaderPath);
 		std::string fragmentShaderSource_str = Utils::ReadFile(fragmentShaderPath);
@@ -163,6 +164,11 @@ namespace Voxel
 	void Shader::UniformIntArray(const std::string& name, size_t size, const int data[]) const {
 		Use();
 		glUniform1iv(glGetUniformLocation(id, name.c_str()), size, data);
+	}
+
+	std::shared_ptr<Shader> Shader::Create(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
+	{
+		return std::make_shared<Shader>(vertexShaderPath, fragmentShaderPath);
 	}
 
 } // namespace Voxel

@@ -8,6 +8,7 @@
 #include <Graphics/Buffer.h>
 
 #include <vector>
+#include <memory>
 
 #include <glad/glad.h>
 
@@ -35,7 +36,7 @@ namespace Voxel
 		return 0;
 	}
 
-	void VertexArray::Create()
+	VertexArray::VertexArray()
 	{
 		glGenVertexArrays(1, &varray);
 	}
@@ -50,14 +51,14 @@ namespace Voxel
 		glBindVertexArray(0);
 	}
 
-	void VertexArray::AddVertexBuffer(const VertexBuffer& vertexBuffer)
+	void VertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer)
 	{
-		VE_ASSERT(vertexBuffer.GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
+		VE_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
 
 		glBindVertexArray(varray);
-		vertexBuffer.Bind();
+		vertexBuffer->Bind();
 
-		const auto& layout = vertexBuffer.GetLayout();
+		const auto& layout = vertexBuffer->GetLayout();
 		for (const auto& element : layout)
 		{
 			switch (element.type)
@@ -118,16 +119,21 @@ namespace Voxel
 		vertexBuffers.push_back(vertexBuffer);
 	}
 
-	void VertexArray::SetElementBuffer(const ElementBuffer& elementBuffer)
+	void VertexArray::SetElementBuffer(const std::shared_ptr<ElementBuffer>& elementBuffer)
 	{
 		glBindVertexArray(varray);
-		elementBuffer.Bind();
+		elementBuffer->Bind();
 		this->elementBuffer = elementBuffer;
 	}
 
 	void VertexArray::Destroy()
 	{
 		glDeleteVertexArrays(1, &varray);
+	}
+
+	std::shared_ptr<VertexArray> VertexArray::Create()
+	{
+		return std::make_shared<VertexArray>();
 	}
 
 } // namespace Voxel

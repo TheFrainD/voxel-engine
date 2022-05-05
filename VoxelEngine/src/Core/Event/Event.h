@@ -12,7 +12,7 @@
 
 #define EVENT(TYPE) ((TYPE*) event)
 
-#define CALLBACK(FUNC, OBJ) std::bind(&FUNC, OBJ, std::placeholders::_1)
+#define EVENT_CALLBACK(FUNC, OBJ) std::bind(&FUNC, OBJ, std::placeholders::_1)
 
 namespace Voxel
 {

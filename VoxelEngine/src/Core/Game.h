@@ -22,6 +22,9 @@ namespace Voxel
 
 		void Run(Uint32 width, Uint32 height, const char* title);
 		void Close();
+
+		Uint32 GetWindowWidth() const { return window->GetWidth(); }
+		Uint32 GetWindowHeight() const { return window->GetHeight(); }
 	private:
 		std::unique_ptr<Window> window;
 		bool running;

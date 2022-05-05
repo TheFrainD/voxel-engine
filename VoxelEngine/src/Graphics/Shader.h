@@ -5,6 +5,7 @@
 #include <Utils/ResourceManager.h>
 
 #include <string>
+#include <memory>
 
 #include <glm/glm.hpp>
 
@@ -14,7 +15,7 @@ namespace Voxel
 	class Shader : public Utils::Resource
 	{
 	public:
-		void Load(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+		Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
 
 		void Destroy() override;
 		void Use() const;
@@ -27,6 +28,8 @@ namespace Voxel
 		void UniformMat4(const std::string& name, const glm::mat4& mat) const;
 		void UniformInt(const std::string& name, int value) const;
 		void UniformIntArray(const std::string& name, size_t size, const int data[]) const;
+
+		static std::shared_ptr<Shader> Create(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
 	private:
 		Uint32 id;
 	};

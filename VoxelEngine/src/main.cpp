@@ -8,26 +8,21 @@
 #include <Graphics/Texture.h>
 #include <Graphics/Buffer.h>
 #include <Graphics/VertexArray.h>
+#include <Graphics/Camera2D.h>
+#include <Graphics/Renderer2D.h>
+
+#include <memory>
+#include <cmath>
 
 #include <glad/glad.h>
-
-float vertices[] = {
-	-1.0f,-1.0f, 0.0f, 0.0f, 1.0f,
-	1.0f,-1.0f, 0.0f, 1.0f, 1.0f,
-	-1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-
-	1.0f,-1.0f, 0.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-	-1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-};
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace Voxel;
 
-VertexArray vertexArray;
-VertexBuffer vertexBuffer;
+std::shared_ptr<Texture> texture;
 
-Shader shader;
-Texture texture;
+std::shared_ptr<Camera2D> camera;
 
 class VoxelEngine : public Game
 {
@@ -44,28 +39,17 @@ public:
 
 	virtual void Start() override
 	{
-		EventBus::Subscribe<KeyPressedEvent>([this](const Event* event) {
-				if (EVENT(KeyPressedEvent)->GetKey() == Key::Escape)
-				{
-					this->Close();
-				}
-			});
+		EventBus::Subscribe<KeyPressedEvent>([this](const Event* event){
+			if (EVENT(KeyPressedEvent)->GetKey() == Key::Escape)
+			{
+				this->Close();
+			}
+		});
 
-		shader.Load("data/shaders/test.vert", "data/shaders/test.frag");
-		texture.Load("data/textures/mario.jpg");
+		texture = Texture::Create("data/textures/mario.jpg");
 
-		vertexArray.Create();
-		vertexBuffer.Create(vertices, sizeof(vertices));
-		std::vector<BufferElement> bufferElements{
-
-		};
-		vertexBuffer.SetLayout(BufferLayout({
-				BufferElement(ShaderDataType::Float3, "position"),
-				BufferElement(ShaderDataType::Float2, "uv")
-			}));
-		vertexArray.AddVertexBuffer(vertexBuffer);
-
-		glClearColor(148.0f / 255, 148.0f / 255, 143.0f / 255, 1.0);
+		camera = Camera2D::Create(this);
+		Renderer2D::SetCurrentCamera(camera);
 	}
 
 	virtual void Update(float deltaTime) override
@@ -75,18 +59,18 @@ public:
 
 	virtual void Render() override
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		shader.Use();
-		texture.Bind();
-		vertexArray.Bind();
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		vertexArray.Unbind();
+		for (int j = 0; j < 28; j++)
+		{
+			for (int i = 0; i < 49; i++)
+			{
+				Renderer2D::DrawQuad({ 13.0f + (26.0f * i), 13.0f + (26.0f * j), 0.0f }, { 25.0f, 25.0f }, texture);
+			}
+		}
 	}
 
 	virtual void Destroy() override
 	{
-
+		
 	}
 };
 

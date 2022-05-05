@@ -6,6 +6,7 @@
 #include <Graphics/Buffer.h>
 
 #include <vector>
+#include <memory>
 
 namespace Voxel
 {
@@ -13,23 +14,25 @@ namespace Voxel
 	class VertexArray : public Utils::Resource
 	{
 	public:
-		void Create();
+		VertexArray();
 
 		void Bind() const;
 		void Unbind() const;
 
-		void AddVertexBuffer(const VertexBuffer& vertexBuffer);
-		void SetElementBuffer(const ElementBuffer& elementBuffer);
+		void AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer);
+		void SetElementBuffer(const std::shared_ptr<ElementBuffer>& elementBuffer);
 
-		const std::vector<VertexBuffer>& GetVertexBuffer() const { return vertexBuffers; }
-		const ElementBuffer& GetElementBuffer() const { return elementBuffer; }
+		const std::vector<std::shared_ptr<VertexBuffer>>& GetVertexBuffer() const { return vertexBuffers; }
+		const std::shared_ptr<ElementBuffer>& GetElementBuffer() const { return elementBuffer; }
 
 		void Destroy() override;
+
+		static std::shared_ptr<VertexArray> Create();
 	private:
 		Uint32 varray;
 		Uint32 vertexBufferIndex = 0;
-		std::vector<VertexBuffer> vertexBuffers;
-		ElementBuffer elementBuffer;
+		std::vector<std::shared_ptr<VertexBuffer>> vertexBuffers;
+		std::shared_ptr<ElementBuffer> elementBuffer;
 	};
 
 } // namespace Voxel
