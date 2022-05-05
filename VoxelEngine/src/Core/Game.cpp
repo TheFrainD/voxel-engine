@@ -41,7 +41,6 @@ namespace Voxel
 		window = std::unique_ptr<Window>(new Window(width, height, title));
 
 		Input::Init(window->Get());
-		Renderer2D::Init();
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -55,14 +54,16 @@ namespace Voxel
 
 		Start();
 
+		Renderer2D::Init();
+
 		while (running)
 		{
 			window->Update();
 
 			Update(0.0f);
-
 			
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			Renderer2D::ResetStats();
 			Renderer2D::BeginBatch();
 			Render();
 			Renderer2D::Flush();

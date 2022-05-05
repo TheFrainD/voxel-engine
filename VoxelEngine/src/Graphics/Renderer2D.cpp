@@ -55,6 +55,8 @@ namespace Voxel
 		glm::vec4 quadVertexPositions[4];
 
 		std::shared_ptr<Camera2D> camera;
+
+		Renderer2D::Statistics statistics;
 	};
 
 	static Renderer2D_Data _data;
@@ -100,6 +102,8 @@ namespace Voxel
 		_data.textureSlots[0] = _data.whiteTexture;
 
 		_data.shader = Shader::Create("data/shaders/Batch2D.vert", "data/shaders/Batch2D.frag");
+		_data.shader->UniformMat4("u_projection", _data.camera->GetProjection());
+		_data.shader->UniformMat4("u_view", _data.camera->GetView());
 
 		int* sampler = new int[MAX_TEXTURES];
 		for (Uint32 i = 0; i < MAX_TEXTURES; i++) {
@@ -149,13 +153,13 @@ namespace Voxel
 		}
 
 		_data.shader->Use();
-		_data.shader->UniformMat4("u_projection", _data.camera->GetProjection());
-		_data.shader->UniformMat4("u_view", _data.camera->GetView());
 
 		_data.vertexArray->Bind();
 		_data.elementBuffer->Bind();
 
 		glDrawElements(GL_TRIANGLES, _data.indexCount, GL_UNSIGNED_INT, nullptr);
+
+		_data.statistics.drawCalls++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
@@ -181,6 +185,7 @@ namespace Voxel
 		}
 
 		_data.indexCount += 6;
+		_data.statistics.quadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const std::shared_ptr<Texture>& texture)
@@ -227,16 +232,42 @@ namespace Voxel
 		}
 
 		_data.indexCount += 6;
+		_data.statistics.quadCount++;
 	}
 
 	void Renderer2D::SetCurrentCamera(const std::shared_ptr<Camera2D>& camera)
 	{
+		if (_data.camera)
+		{
+			_data.camera->SetCurrent(false);
+		}
 		_data.camera = camera;
+		camera->SetCurrent(true);
 	}
 
 	const std::shared_ptr<Camera2D>& Renderer2D::GetCurrentCamera()
 	{
 		return _data.camera;
+	}
+
+	void Renderer2D::SendView(const glm::mat4& view)
+	{
+		_data.shader->UniformMat4("u_view", _data.camera->GetView());
+	}
+
+	void Renderer2D::SendProjection(const glm::mat4& projection)
+	{
+		_data.shader->UniformMat4("u_projection", _data.camera->GetProjection());
+	}
+
+	void Renderer2D::ResetStats()
+	{
+		memset(&_data.statistics, 0, sizeof(Statistics));
+	}
+
+	Renderer2D::Statistics Renderer2D::GetStats()
+	{
+		return _data.statistics;
 	}
 
 } // namespace Voxel

@@ -36,9 +36,14 @@ namespace Voxel
 		const glm::vec3& GetPosition() const { return position; }
 		const glm::mat4& GetView() const { return view; }
 		const glm::mat4& GetProjection() const { return projection; }
+
+		bool IsCurrent() const { return current; }
+		void SetCurrent(bool current) { this->current = current; }
 	protected:
 		virtual void UpdateView() = 0;
 		virtual void UpdateProjection(Uint32 windowWidth, Uint32 windowHeight) = 0;
+
+		bool current = false;
 
 		glm::vec3 position;
 		glm::mat4 view;

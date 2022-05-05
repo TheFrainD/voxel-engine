@@ -27,6 +27,18 @@ namespace Voxel
 
 		static void SetCurrentCamera(const std::shared_ptr<Camera2D>& camera);
 		static const std::shared_ptr<Camera2D>& GetCurrentCamera();
+
+		static void SendView(const glm::mat4& view);
+		static void SendProjection(const glm::mat4& projection);
+
+		struct Statistics
+		{
+			Uint32 drawCalls = 0;
+			Uint32 quadCount = 0;
+		};
+
+		static void ResetStats();
+		static Statistics GetStats();
 	};
 
 } // namespace Voxel
