@@ -4,23 +4,14 @@
 #include <Core/Input.h>
 #include <Core/Event/Event.h>
 #include <Core/Event/InputEvent.h>
-#include <Graphics/Shader.h>
 #include <Graphics/Texture.h>
-#include <Graphics/Buffer.h>
-#include <Graphics/VertexArray.h>
-#include <Graphics/Camera2D.h>
 #include <Graphics/Renderer2D.h>
+#include <Graphics/Camera2D.h>
+#include <UI/UI.h>
 
 #include <memory>
-#include <cmath>
-
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 using namespace Voxel;
-
-std::shared_ptr<Texture> texture;
 
 std::shared_ptr<Camera2D> camera;
 
@@ -46,7 +37,7 @@ public:
 			}
 		});
 
-		texture = Texture::Create("data/textures/mario.jpg");
+		UI::Add(UIElement::Create(Texture::Create("data/textures/crosshair.png"), { 0.5f, 0.5f }, { 16.0f, 16.0f }));
 
 		camera = Camera2D::Create(this);
 		Renderer2D::SetCurrentCamera(camera);
@@ -59,13 +50,7 @@ public:
 
 	virtual void Render() override
 	{
-		for (int j = 0; j < 28; j++)
-		{
-			for (int i = 0; i < 49; i++)
-			{
-				Renderer2D::DrawQuad({ 13.0f + (26.0f * i), 13.0f + (26.0f * j), 0.0f }, { 25.0f, 25.0f }, texture);
-			}
-		}
+		
 	}
 
 	virtual void Destroy() override

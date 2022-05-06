@@ -10,6 +10,7 @@
 #include <Core/Event/WindowEvent.h>
 #include <Utils/ResourceManager.h>
 #include <Graphics/Renderer2D.h>
+#include <UI/UI.h>
 
 #include <memory>
 #include <functional>
@@ -24,11 +25,13 @@ namespace Voxel
 		Log::Init("log");
 		running = true;
 
-		EventBus::Subscribe<WindowCloseEvent>([this](const Event* event)
-			{
-				VE_LOG_INFO("Window closed!");
-				this->Close();
-			});
+		EventBus::Subscribe<WindowCloseEvent>([this](const Event* event) {
+			this->Close();
+		});
+
+		EventBus::Subscribe<WindowResizeEvent>([this](const Event* event) {
+			UI::SetDimensions(EVENT(WindowResizeEvent)->GetWidth(), EVENT(WindowResizeEvent)->GetHeight());
+		});
 	}
 
 	Game::~Game()
@@ -54,6 +57,8 @@ namespace Voxel
 
 		Start();
 
+		UI::SetDimensions(width, height);
+
 		Renderer2D::Init();
 
 		while (running)
@@ -65,6 +70,7 @@ namespace Voxel
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			Renderer2D::ResetStats();
 			Renderer2D::BeginBatch();
+			UI::Render();
 			Render();
 			Renderer2D::Flush();
 		}
