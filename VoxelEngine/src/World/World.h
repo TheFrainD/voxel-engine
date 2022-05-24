@@ -28,7 +28,7 @@ namespace Voxel
 		static void Destroy();
 
 		static std::shared_ptr<Chunk> GetChunk(Int32 x, Int32 y, Int32 z);
-		static std::shared_ptr<Block> GetBlock(Int32 x, Int32 y, Int32 z);
+		static Block* GetBlock(Int32 x, Int32 y, Int32 z);
 		static void SetBlock(Int32 x, Int32 y, Int32 z, Uint32 id);
 
 		static const std::shared_ptr<Camera3D>& GetCamera();

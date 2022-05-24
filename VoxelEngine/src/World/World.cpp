@@ -46,11 +46,11 @@ namespace Voxel
 								
 								if (y <= fabs(sinf(sampleX / 5.0f) * 50.0f))
 								{
-									chunk->SetBlock(x, y, z, Block::Create(BlockType::Stone));
+									chunk->SetBlock(x, y, z, BlockType::Stone);
 								}
 								else
 								{
-									chunk->SetBlock(x, y, z, Block::Create(BlockType::Air));
+									chunk->SetBlock(x, y, z, BlockType::Air);
 								}
 							}
 						}
@@ -113,7 +113,7 @@ namespace Voxel
 		return nullptr;
 	}
 
-	std::shared_ptr<Block> World::GetBlock(Int32 x, Int32 y, Int32 z)
+	Block* World::GetBlock(Int32 x, Int32 y, Int32 z)
 	{
 		int cx = x / Chunk::size.x;
 		int cy = y / Chunk::size.y;
@@ -144,7 +144,7 @@ namespace Voxel
 		int lx = x - Chunk::size.x;
 		int ly = y - Chunk::size.y;
 		int lz = z - Chunk::size.z;
-		chunk->SetBlock(lx, ly, lz, Block::Create(id));
+		chunk->SetBlock(lx, ly, lz, id);
 	}
 
 	const std::shared_ptr<Camera3D>& World::GetCamera()

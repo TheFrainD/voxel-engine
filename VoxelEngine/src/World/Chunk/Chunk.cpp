@@ -37,7 +37,7 @@ namespace Voxel
 			{
 				for (Uint32 x = 0; x < size.x; x++)
 				{
-					std::shared_ptr<Block> block = GetBlock(x, y, z);
+					Block* block = GetBlock(x, y, z);
 					const glm::vec3 position = glm::vec3(x, y, z);
 
 					if (block == nullptr || block->id == BlockType::Air)
@@ -130,9 +130,9 @@ namespace Voxel
 		mesh->SetData();
 	}
 
-	const std::shared_ptr<Block>& Chunk::GetBlock(Int32 x, Int32 y, Int32 z) {
+	Block* Chunk::GetBlock(Int32 x, Int32 y, Int32 z) {
 		if (x >= 0 && y >= 0 && z >= 0 && x < size.x && y < size.y && z < size.z) {
-			return blocks[(z * size.x * size.y) + (y * size.x) + x];
+			return &blocks[(z * size.x * size.y) + (y * size.x) + x];
 		}
 		else if (x < 0 && z >= 0 && z < size.z && y >= 0 && y < size.y) 
 		{
@@ -168,7 +168,7 @@ namespace Voxel
 		return nullptr;
 	}
 
-	void Chunk::SetBlock(Int32 x, Int32 y, Int32 z, const std::shared_ptr<Block>& block)
+	void Chunk::SetBlock(Int32 x, Int32 y, Int32 z, const Block& block)
 	{
 		if (x >= 0 && y >= 0 && z >= 0 && x < size.x && y < size.y && z < size.z)
 		{

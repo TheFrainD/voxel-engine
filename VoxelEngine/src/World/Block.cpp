@@ -40,17 +40,17 @@ namespace Voxel
 		// Stone
 		bd.transparent = false;
 		bd.faces[Side::Top].vertices = base_vertices[Side::Top];
-		bd.faces[Side::Top].uv = CalculateUV(1);
+		bd.faces[Side::Top].uv = CalculateUV(2);
 		bd.faces[Side::Bottom].vertices = base_vertices[Side::Bottom];
-		bd.faces[Side::Bottom].uv = CalculateUV(1);
+		bd.faces[Side::Bottom].uv = CalculateUV(2);
 		bd.faces[Side::Front].vertices = base_vertices[Side::Front];
-		bd.faces[Side::Front].uv = CalculateUV(1);
+		bd.faces[Side::Front].uv = CalculateUV(2);
 		bd.faces[Side::Back].vertices = base_vertices[Side::Back];
-		bd.faces[Side::Back].uv = CalculateUV(1);
+		bd.faces[Side::Back].uv = CalculateUV(2);
 		bd.faces[Side::Right].vertices = base_vertices[Side::Right];
-		bd.faces[Side::Right].uv = CalculateUV(1);
+		bd.faces[Side::Right].uv = CalculateUV(2);
 		bd.faces[Side::Left].vertices = base_vertices[Side::Left];
-		bd.faces[Side::Left].uv = CalculateUV(1);
+		bd.faces[Side::Left].uv = CalculateUV(2);
 		block_data[BlockType::Stone] = bd;
 
 		// Dirt
@@ -84,11 +84,6 @@ namespace Voxel
 			glm::vec2(u,  v ),
 			glm::vec2(u,  vv),
 		};
-	}
-
-	std::shared_ptr<Block> Block::Create(Uint32 id)
-	{
-		return std::make_shared<Block>(id);
 	}
 
 } // namespace Voxel

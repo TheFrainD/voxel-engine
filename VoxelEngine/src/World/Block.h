@@ -101,10 +101,10 @@ namespace Voxel
 		static std::array<BlockData, 256> block_data;
 		static void LoadData();
 
-		Uint32 id;
+		Block() : id(BlockType::Air) { }
 		Block(Uint32 id) : id(id) { }
-
-		static std::shared_ptr<Block> Create(Uint32 id);
+	public:
+		Uint32 id;
 	private:
 		static std::array<glm::vec2, 4> CalculateUV(Uint32 id);
 	};

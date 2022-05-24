@@ -24,8 +24,8 @@ namespace Voxel
 		void GenerateMesh();
 		const std::shared_ptr<ChunkMesh>& GetMesh() const { return mesh; }
 
-		const std::shared_ptr<Block>& GetBlock(Int32 x, Int32 y, Int32 z);
-		void SetBlock(Int32 x, Int32 y, Int32 z, const std::shared_ptr<Block>& block);
+		Block* GetBlock(Int32 x, Int32 y, Int32 z);
+		void SetBlock(Int32 x, Int32 y, Int32 z, const Block& block);
 
 		void SetNeighbour(int side, const std::shared_ptr<Chunk>& chunk);
 
@@ -38,7 +38,7 @@ namespace Voxel
 		bool modified;
 		glm::ivec3 position;
 		std::shared_ptr<ChunkMesh> mesh;
-		std::array<std::shared_ptr<Block>, volume> blocks;
+		std::array<Block, volume> blocks;
 		std::array<std::shared_ptr<Chunk>, 6> neighbouring;
 	};
 
