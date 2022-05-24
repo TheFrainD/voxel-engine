@@ -26,6 +26,8 @@ namespace Voxel
 		bool GetVSync() const { return data.vsync; }
 
 		GLFWwindow* Get() { return window; }
+
+		double GetTime() const;
 	private:
 		GLFWwindow* window;
 

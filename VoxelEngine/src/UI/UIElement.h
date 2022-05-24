@@ -22,7 +22,7 @@ namespace Voxel
 
 		void SetPosition(const glm::vec2& position) { this->position = position; }
 		const glm::vec2& GetPosition() const { return position; }
-
+		 
 		void SetSize(const glm::vec2& size) { this->size = size; }
 		const glm::vec2& GetSize() const { return size; }
 

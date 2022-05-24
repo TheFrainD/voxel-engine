@@ -10,12 +10,11 @@
 #include <Core/Event/WindowEvent.h>
 #include <Utils/ResourceManager.h>
 #include <Graphics/Renderer2D.h>
+#include <Graphics/Renderer.h>
 #include <UI/UI.h>
 
 #include <memory>
 #include <functional>
-
-#include <glad/glad.h>
 
 namespace Voxel
 {
@@ -44,34 +43,35 @@ namespace Voxel
 		window = std::unique_ptr<Window>(new Window(width, height, title));
 
 		Input::Init(window->Get());
-
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-		// enable depth test
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_ALWAYS);
-
-		// enable blending
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		Renderer::Prepare();
 
 		Start();
 
+		UI::Init(this);
 		UI::SetDimensions(width, height);
 
 		Renderer2D::Init();
 
+		float deltaTime = 0;
+		float currentTime = 0;
+		float lastTime = 0;
 		while (running)
 		{
+			currentTime = window->GetTime();
+			deltaTime = currentTime - lastTime;
+			lastTime = currentTime;
+
 			window->Update();
 
-			Update(0.0f);
+			Update(deltaTime);
 			
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			Renderer::Clear();
 			Renderer2D::ResetStats();
 			Renderer2D::BeginBatch();
 			UI::Render();
+
 			Render();
+
 			Renderer2D::Flush();
 		}
 

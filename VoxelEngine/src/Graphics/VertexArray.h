@@ -22,7 +22,7 @@ namespace Voxel
 		void AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer);
 		void SetElementBuffer(const std::shared_ptr<ElementBuffer>& elementBuffer);
 
-		const std::vector<std::shared_ptr<VertexBuffer>>& GetVertexBuffer() const { return vertexBuffers; }
+		const std::vector<std::shared_ptr<VertexBuffer>>& GetVertexBuffers() const { return vertexBuffers; }
 		const std::shared_ptr<ElementBuffer>& GetElementBuffer() const { return elementBuffer; }
 
 		void Destroy() override;

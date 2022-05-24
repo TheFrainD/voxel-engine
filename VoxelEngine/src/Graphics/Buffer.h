@@ -135,7 +135,11 @@ namespace Voxel
 	class ElementBuffer : public Utils::Resource
 	{
 	public:
+		ElementBuffer(Uint32 count);
 		ElementBuffer(Uint32* elements, Uint32 count);
+
+		void SetData(Uint32* elements, Uint32 count);
+		void SetData(const std::vector<Uint32>& elements);
 
 		void Bind() const;
 		void Unbind() const;
@@ -144,6 +148,7 @@ namespace Voxel
 
 		void Destroy() override;
 
+		static std::shared_ptr<ElementBuffer> Create(Uint32 count);
 		static std::shared_ptr<ElementBuffer> Create(Uint32* elements, Uint32 count);
 	private:
 		Uint32 buffer;

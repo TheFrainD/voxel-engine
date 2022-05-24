@@ -237,6 +237,7 @@ namespace Voxel
 
 	void Renderer2D::SetCurrentCamera(const std::shared_ptr<Camera2D>& camera)
 	{
+		
 		if (_data.camera)
 		{
 			_data.camera->SetCurrent(false);

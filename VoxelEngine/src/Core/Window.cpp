@@ -102,4 +102,9 @@ namespace Voxel
         data.vsync = vsync;
     }
 
+    double Window::GetTime() const
+    {
+        return glfwGetTime();
+    }
+
 } // namespace Voxel

@@ -32,6 +32,9 @@ namespace Voxel
 
 	void VertexBuffer::SetData(const void* data, Uint32 size)
 	{
+		if (size == 0)
+			return;
+		
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}
@@ -61,15 +64,39 @@ namespace Voxel
 		return std::make_shared<VertexBuffer>(data, size);
 	}
 
+	ElementBuffer::ElementBuffer(Uint32 count) :
+		buffer(0), count(count)
+	{
+		glGenBuffers(1, &buffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), nullptr, GL_DYNAMIC_DRAW);
 
+		Utils::ResourceManager::Add(this);
+	}
 
-	ElementBuffer::ElementBuffer(Uint32* elements, Uint32 count)
+	ElementBuffer::ElementBuffer(Uint32* elements, Uint32 count) :
+		buffer(0), count(count)
 	{
 		glGenBuffers(1, &buffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), elements, GL_STATIC_DRAW);
 
 		Utils::ResourceManager::Add(this);
+	}
+
+	void ElementBuffer::SetData(Uint32* elements, Uint32 count)
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, count * sizeof(uint32_t), elements);
+	}
+
+	void ElementBuffer::SetData(const std::vector<Uint32>& elements)
+	{
+		if (elements.size() == 0)
+			return;
+		
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, elements.size() * sizeof(uint32_t), &elements[0]);
 	}
 
 	void ElementBuffer::Bind() const
@@ -85,6 +112,11 @@ namespace Voxel
 	void ElementBuffer::Destroy()
 	{
 		glDeleteBuffers(1, &buffer);
+	}
+
+	std::shared_ptr<ElementBuffer> ElementBuffer::Create(Uint32 count)
+	{
+		return std::make_shared<ElementBuffer>(count);
 	}
 
 	std::shared_ptr<ElementBuffer> ElementBuffer::Create(Uint32* elements, Uint32 count)
