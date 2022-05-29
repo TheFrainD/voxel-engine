@@ -157,6 +157,8 @@ namespace Voxel
 		_data.vertexArray->Bind();
 		_data.elementBuffer->Bind();
 
+		glDepthFunc(GL_ALWAYS);
+
 		glDrawElements(GL_TRIANGLES, _data.indexCount, GL_UNSIGNED_INT, nullptr);
 
 		_data.statistics.drawCalls++;

@@ -23,7 +23,6 @@ namespace Voxel
 		
 		// enable depth test
 		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_ALWAYS);
 
 		// enable blending
 		glEnable(GL_BLEND);

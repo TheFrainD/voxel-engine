@@ -27,6 +27,7 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define ABS(a) (((a) < 0) ? -(a) : (a))
 #define LERP(a, b, t) ((a) + ((b) - (a)) * (t))
+#define INVERSE_LERP(a, b, t) (((t) - (a)) / ((b) - (a)))
 #define SIGN(x) ((x) == 0 ? 0 : (((x) > 0) ? 1 : -1))
 
 namespace Voxel

@@ -68,8 +68,8 @@ namespace Voxel
 			Renderer::Clear();
 			Renderer2D::ResetStats();
 			Renderer2D::BeginBatch();
+			
 			UI::Render();
-
 			Render();
 
 			Renderer2D::Flush();

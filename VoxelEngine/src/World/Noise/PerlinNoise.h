@@ -1,0 +1,22 @@
+#pragma once
+
+// Headers
+#include <Config.h>
+#include <World/Noise/Noise.h>
+
+#include <FastNoiseLite.h>
+
+namespace Voxel
+{
+
+	class PerlinNoise : public Noise
+	{
+	public:
+		PerlinNoise();
+
+		float Compute(float x, float z) override;
+	private:
+		FastNoiseLite noise;
+	};
+
+} // namespace Voxel

@@ -126,44 +126,54 @@ namespace Voxel
 		glUseProgram(id);
 	}
 
-	void Shader::UniformFloat(const std::string& name, float value) const {
-		Use();
-		glUniform1f(glGetUniformLocation(id, name.c_str()), value);
+	Int32 Shader::GetUniformLocation(const std::string& name)
+	{
+		if (uniformLocationsCache.find(name) == uniformLocationsCache.end())
+		{
+			uniformLocationsCache[name] = glGetUniformLocation(id, name.c_str());
+		}
+		
+		return uniformLocationsCache[name];
 	}
 
-	void Shader::UniformFloatArray(const std::string& name, size_t size, const float data[]) const {
+	void Shader::UniformFloat(const std::string& name, float value) {
 		Use();
-		glUniform1fv(glGetUniformLocation(id, name.c_str()), size, data);
+		glUniform1f(GetUniformLocation(name), value);
 	}
 
-	void Shader::UniformVec2(const std::string& name, const glm::vec2& vec) const {
+	void Shader::UniformFloatArray(const std::string& name, size_t size, const float data[]) {
 		Use();
-		glUniform2f(glGetUniformLocation(id, name.c_str()), vec.x, vec.y);
+		glUniform1fv(GetUniformLocation(name), size, data);
 	}
 
-	void Shader::UniformVec3(const std::string& name, const glm::vec3& vec) const {
+	void Shader::UniformVec2(const std::string& name, const glm::vec2& vec) {
 		Use();
-		glUniform3f(glGetUniformLocation(id, name.c_str()), vec.x, vec.y, vec.z);
+		glUniform2f(GetUniformLocation(name), vec.x, vec.y);
 	}
 
-	void Shader::UniformVec4(const std::string& name, const glm::vec4& vec) const {
+	void Shader::UniformVec3(const std::string& name, const glm::vec3& vec) {
 		Use();
-		glUniform4f(glGetUniformLocation(id, name.c_str()), vec.x, vec.y, vec.z, vec.w);
+		glUniform3f(GetUniformLocation(name), vec.x, vec.y, vec.z);
 	}
 
-	void Shader::UniformMat4(const std::string& name, const glm::mat4& mat) const {
+	void Shader::UniformVec4(const std::string& name, const glm::vec4& vec) {
 		Use();
-		glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, false, glm::value_ptr(mat));
+		glUniform4f(GetUniformLocation(name), vec.x, vec.y, vec.z, vec.w);
 	}
 
-	void Shader::UniformInt(const std::string& name, int value) const {
+	void Shader::UniformMat4(const std::string& name, const glm::mat4& mat) {
 		Use();
-		glUniform1i(glGetUniformLocation(id, name.c_str()), value);
+		glUniformMatrix4fv(GetUniformLocation(name), 1, false, glm::value_ptr(mat));
 	}
 
-	void Shader::UniformIntArray(const std::string& name, size_t size, const int data[]) const {
+	void Shader::UniformInt(const std::string& name, int value) {
 		Use();
-		glUniform1iv(glGetUniformLocation(id, name.c_str()), size, data);
+		glUniform1i(GetUniformLocation(name), value);
+	}
+
+	void Shader::UniformIntArray(const std::string& name, size_t size, const int data[]) {
+		Use();
+		glUniform1iv(GetUniformLocation(name), size, data);
 	}
 
 	std::shared_ptr<Shader> Shader::Create(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)

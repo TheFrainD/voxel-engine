@@ -30,6 +30,7 @@ project "VoxelEngine"
 		"vendor/spdlog/include",
 		"vendor/glm",
 		"vendor/stb",
+		"vendor/FastNoiseLite/Cpp"
 	}
 
     links

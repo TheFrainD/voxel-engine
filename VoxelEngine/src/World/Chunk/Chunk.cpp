@@ -50,10 +50,10 @@ namespace Voxel
 					if (GetBlock(x, y + 1, z) != nullptr && Block::block_data[GetBlock(x, y + 1, z)->id].transparent)
 					{
 						BlockFace face = Block::block_data[block->id].faces[Side::Top];
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[0], face.uv[0]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[1], face.uv[1]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[2], face.uv[2]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[3], face.uv[3]));
+						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[0], face.uv[0], 1.0f));
+						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[1], face.uv[1], 1.0f));
+						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[2], face.uv[2], 1.0f));
+						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[3], face.uv[3], 1.0f));
 						faceCount++;
 					}
 
@@ -61,55 +61,70 @@ namespace Voxel
 					if (GetBlock(x, y - 1, z) != nullptr && Block::block_data[GetBlock(x, y - 1, z)->id].transparent)
 					{
 						BlockFace face = Block::block_data[block->id].faces[Side::Bottom];
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[0], face.uv[0]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[1], face.uv[1]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[2], face.uv[2]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[3], face.uv[3]));
-						faceCount++;
+						if (face.render)
+						{
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[0], face.uv[0], 0.5f));
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[1], face.uv[1], 0.5f));
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[2], face.uv[2], 0.5f));
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[3], face.uv[3], 0.5f));
+							faceCount++;
+						}
 					}
 
 					// front face
 					if (GetBlock(x, y, z + 1) != nullptr && Block::block_data[GetBlock(x, y, z + 1)->id].transparent)
 					{
 						BlockFace face = Block::block_data[block->id].faces[Side::Front];
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[0], face.uv[0]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[1], face.uv[1]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[2], face.uv[2]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[3], face.uv[3]));
-						faceCount++;
+						if (face.render)
+						{
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[0], face.uv[0], 0.6f));
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[1], face.uv[1], 0.6f));
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[2], face.uv[2], 0.6f));
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[3], face.uv[3], 0.6f));
+							faceCount++;
+						}
 					}
 
 					// back face
 					if (GetBlock(x, y, z - 1) != nullptr && Block::block_data[GetBlock(x, y, z - 1)->id].transparent)
 					{
 						BlockFace face = Block::block_data[block->id].faces[Side::Back];
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[0], face.uv[0]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[1], face.uv[1]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[2], face.uv[2]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[3], face.uv[3]));
-						faceCount++;
+						if (face.render)
+						{
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[0], face.uv[0], 0.6f));
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[1], face.uv[1], 0.6f));
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[2], face.uv[2], 0.6f));
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[3], face.uv[3], 0.6f));
+							faceCount++;
+						}
 					}
 
 					// right face
 					if (GetBlock(x + 1, y, z) != nullptr && Block::block_data[GetBlock(x + 1, y, z)->id].transparent)
 					{
 						BlockFace face = Block::block_data[block->id].faces[Side::Right];
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[0], face.uv[0]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[1], face.uv[1]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[2], face.uv[2]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[3], face.uv[3]));
-						faceCount++;
+						if (face.render)
+						{
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[0], face.uv[0], 0.8f));
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[1], face.uv[1], 0.8f));
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[2], face.uv[2], 0.8f));
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[3], face.uv[3], 0.8f));
+							faceCount++;
+						}
 					}
 
 					// left face
 					if (GetBlock(x - 1, y, z) != nullptr && Block::block_data[GetBlock(x - 1, y, z)->id].transparent)
 					{
 						BlockFace face = Block::block_data[block->id].faces[Side::Left];
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[0], face.uv[0]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[1], face.uv[1]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[2], face.uv[2]));
-						vertices.push_back(ChunkMesh::Vertex(position + face.vertices[3], face.uv[3]));
-						faceCount++;
+						if (face.render)
+						{
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[0], face.uv[0], 0.8f));
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[1], face.uv[1], 0.8f));
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[2], face.uv[2], 0.8f));
+							vertices.push_back(ChunkMesh::Vertex(position + face.vertices[3], face.uv[3], 0.8f));
+							faceCount++;
+						}
 					}
 
 					int t = vertices.size() - 4 * faceCount;
@@ -125,9 +140,7 @@ namespace Voxel
 			}
 		}
 
-		mesh->vertices = vertices;
-		mesh->elements = elements;
-		mesh->SetData();
+		mesh->SetData(vertices, elements);
 	}
 
 	Block* Chunk::GetBlock(Int32 x, Int32 y, Int32 z) {

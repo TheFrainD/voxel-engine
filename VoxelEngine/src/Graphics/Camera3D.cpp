@@ -57,11 +57,6 @@ namespace Voxel
 		view = glm::lookAt(position, position + front, up);
 	}
 
-	void Camera3D::Update()
-	{
-		UpdateView();
-	}
-
 	void Camera3D::OnMouseMoved(const Event* event)
 	{
 		glm::vec2 deltaPosition = EVENT(MouseMovedEvent)->GetPosition() - EVENT(MouseMovedEvent)->GetLastPosition();
@@ -69,6 +64,8 @@ namespace Voxel
 		deltaPosition.y = CLAMP(deltaPosition.y, -100.0f, 100.0f);
 		yaw += deltaPosition.x * sensitivity;
 		pitch -= deltaPosition.y * sensitivity;
+
+		UpdateView();
 	}
 
 	std::shared_ptr<Camera3D> Camera3D::Create(const Game* game, float fov, float sensitivity)

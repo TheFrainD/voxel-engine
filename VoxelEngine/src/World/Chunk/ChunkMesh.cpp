@@ -23,7 +23,8 @@ namespace Voxel
 		vertexBuffer = VertexBuffer::Create(volume * sizeof(Vertex) * 24);
 		vertexBuffer->SetLayout({
 			{ ShaderDataType::Float3, "a_position"	},
-			{ ShaderDataType::Float2, "a_uv"		}
+			{ ShaderDataType::Float2, "a_uv"		},
+			{ ShaderDataType::Float,  "a_light"		}
 		});
 		vertexArray->AddVertexBuffer(vertexBuffer);
 
@@ -31,10 +32,18 @@ namespace Voxel
 		vertexArray->SetElementBuffer(elementBuffer);
 	}
 
-	void ChunkMesh::SetData()
+	void ChunkMesh::SetData(const std::vector<Vertex>& vertices, const std::vector<Uint32>& elements)
 	{
-		vertexBuffer->SetData(reinterpret_cast<float*>(vertices.data()), sizeof(Vertex) * vertices.size());
-		elementBuffer->SetData(elements);
+		if (vertices.size() != 0)
+		{
+			vertexBuffer->SetData(&vertices[0], sizeof(Vertex) * vertices.size());
+		}
+		if (elements.size() != 0)
+		{
+			elementBuffer->SetData(elements);
+		}
+		
+		size = elements.size();
 	}
 
 	void ChunkMesh::Bind() const

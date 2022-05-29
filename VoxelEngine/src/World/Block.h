@@ -19,7 +19,10 @@ namespace Voxel
 			Air,
 			Grass,
 			Stone,
-			Dirt
+			Dirt,
+			Sand,
+			Water = 15,
+			Bedrock = 18
 		};
 
 	} // namespace BlockType
@@ -37,6 +40,7 @@ namespace Voxel
 
 	struct BlockFace
 	{
+		bool render = true;
 		std::array<glm::vec3, 4> vertices;
 		std::array<glm::vec2, 4> uv;
 	};
@@ -102,11 +106,11 @@ namespace Voxel
 		static void LoadData();
 
 		Block() : id(BlockType::Air) { }
-		Block(Uint32 id) : id(id) { }
+		Block(Uint8 id) : id(id) { }
 	public:
-		Uint32 id;
+		Uint8 id;
 	private:
-		static std::array<glm::vec2, 4> CalculateUV(Uint32 id);
+		static std::array<glm::vec2, 4> CalculateUV(Uint8 id);
 	};
 
 } // namespace Voxel

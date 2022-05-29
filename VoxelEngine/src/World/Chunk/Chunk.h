@@ -16,7 +16,7 @@ namespace Voxel
 	class Chunk
 	{
 	public:
-		static constexpr glm::ivec3 size = glm::ivec3(16, 128, 16);
+		static constexpr glm::ivec3 size = glm::ivec3(32, 128, 32);
 		static constexpr Uint32 volume = size.x * size.y * size.z;
 
 		explicit Chunk(const glm::ivec3& position);

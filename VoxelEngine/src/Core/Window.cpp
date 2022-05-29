@@ -11,7 +11,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-static void glfw_error_callback(int error, const char* msg) {
+static void glfw_error_callback(int error, const char* msg)
+{
     VE_LOG_ERROR("GLFW Error ({}): {}", error, msg);
 }
 
@@ -42,8 +43,8 @@ namespace Voxel
         glfwSetErrorCallback(glfw_error_callback);
 
         // Configure GLFW context
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);	// set OpenGL version 3.3
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);	// set OpenGL version 4.4
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         // Create window

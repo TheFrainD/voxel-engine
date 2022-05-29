@@ -12,6 +12,7 @@
 #include <UI/UI.h>
 #include <World/World.h>
 #include <Player/PlayerController.h>
+#include <World/Chunk/ChunkRenderer.h>
 
 #include <memory>
 
@@ -37,6 +38,16 @@ public:
 			{
 				this->Close();
 			}
+
+			if (EVENT(KeyPressedEvent)->GetKey() == Key::F)
+			{
+				ChunkRenderer::ToggleWireframe();
+			}
+
+			if (EVENT(KeyPressedEvent)->GetKey() == Key::V)
+			{
+				window->SetVSync(!window->GetVSync());
+			}
 		});
 
 		UI::Add(UIElement::Create(Texture::Create("data/textures/crosshair.png"), { 0.5f, 0.5f }, { 16.0f, 16.0f }));
@@ -53,6 +64,11 @@ public:
 	{
 		World::Update();
 		playerController->Update(deltaTime);
+
+		if (Input::IsMouseButtonPressed(MouseButton::ButtonLeft))
+		{
+			World::SetBlock(70, 10, 10, BlockType::Air);
+		}
 	}
 
 	virtual void Render() override

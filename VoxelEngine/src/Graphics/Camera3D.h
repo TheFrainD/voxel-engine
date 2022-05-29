@@ -22,8 +22,6 @@ namespace Voxel
 		const glm::vec3& GetRight() const { return right; }
 		const glm::vec3& GetUp() const { return up; }
 
-		void Update();
-
 		void OnMouseMoved(const Event* event);
 
 		static std::shared_ptr<Camera3D> Create(const Game* game, float fov, float sensitivity);

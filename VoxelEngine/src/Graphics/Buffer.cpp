@@ -36,7 +36,7 @@ namespace Voxel
 			return;
 		
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+		glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
 	}
 
 	void VertexBuffer::Bind() const
@@ -87,16 +87,13 @@ namespace Voxel
 	void ElementBuffer::SetData(Uint32* elements, Uint32 count)
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
-		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, count * sizeof(uint32_t), elements);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), elements, GL_STATIC_DRAW);
 	}
 
 	void ElementBuffer::SetData(const std::vector<Uint32>& elements)
 	{
-		if (elements.size() == 0)
-			return;
-		
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
-		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, elements.size() * sizeof(uint32_t), &elements[0]);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, elements.size() * sizeof(uint32_t), &elements[0], GL_STATIC_DRAW);
 	}
 
 	void ElementBuffer::Bind() const

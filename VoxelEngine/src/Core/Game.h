@@ -25,7 +25,7 @@ namespace Voxel
 
 		Uint32 GetWindowWidth() const { return window->GetWidth(); }
 		Uint32 GetWindowHeight() const { return window->GetHeight(); }
-	private:
+	protected:
 		std::unique_ptr<Window> window;
 		bool running;
 	};
