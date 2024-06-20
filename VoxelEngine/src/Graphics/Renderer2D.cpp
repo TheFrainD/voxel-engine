@@ -20,7 +20,7 @@
 #define MAX_QUAD_COUNT		1000
 #define MAX_VERTEX_COUNT	MAX_QUAD_COUNT * 4
 #define MAX_INDEX_COUNT		MAX_QUAD_COUNT * 6
-#define MAX_TEXTURES		16
+#define MAX_TEXTURES		2
 
 namespace Voxel
 {

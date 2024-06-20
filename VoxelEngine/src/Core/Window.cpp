@@ -43,8 +43,8 @@ namespace Voxel
         glfwSetErrorCallback(glfw_error_callback);
 
         // Configure GLFW context
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);	// set OpenGL version 4.4
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);	// set OpenGL version 4.1
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         // Create window
@@ -59,7 +59,10 @@ namespace Voxel
         success = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
         VE_ASSERT(success == GL_TRUE, "Failed to initialize glad!");
 
-        glViewport(0, 0, data.width, data.height);
+        int framebufferWidth, framebufferHeight;
+        glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
+
+        glViewport(0, 0, framebufferWidth, framebufferHeight);
         
         glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
             WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
