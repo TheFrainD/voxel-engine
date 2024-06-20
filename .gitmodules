@@ -13,3 +13,6 @@
 [submodule "VoxelEngine/vendor/FastNoiseLite"]
 	path = VoxelEngine/vendor/FastNoiseLite
 	url = https://github.com/Auburn/FastNoiseLite
+[submodule "VoxelEngine/vendor/imgui"]
+	path = VoxelEngine/vendor/imgui
+	url = https://github.com/ocornut/imgui.git

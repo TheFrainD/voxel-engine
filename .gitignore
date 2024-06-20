@@ -18,3 +18,4 @@ bin-int
 *.lastbuildstate
 
 log
+build/
