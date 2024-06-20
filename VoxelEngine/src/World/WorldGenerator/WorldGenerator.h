@@ -15,8 +15,10 @@ namespace Voxel
 	public:
 		WorldGenerator(Uint32 size)
 			: size(size) { }
+		
+		virtual ~WorldGenerator() = default;
 
-		virtual void Generate(std::vector<std::shared_ptr<Chunk>>& chunks) = 0;
+		virtual void Generate(std::vector<std::shared_ptr<Chunk>>& chunks, int seed = -1) = 0;
 	private:
 		Uint32 size;
 	};

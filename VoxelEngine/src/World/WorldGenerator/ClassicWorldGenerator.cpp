@@ -4,17 +4,36 @@
 // Headers
 #include <Config.h>
 #include <World/World.h>
-#include <World/Noise/CombinedNoise.h>
+#include <World/Noise/Random.h>
+
+#include <spline.h>
 
 namespace Voxel
 {
+	void Normalize(std::vector<float> &heightMap, Uint32 width, Uint32 depth) {
+		float min = heightMap[0], max = heightMap[0];
 
-	void ClassicWorldGenerator::Generate(std::vector<std::shared_ptr<Chunk>>& chunks)
+		for (int i = 0; i < width * depth; ++i) {
+			auto val = heightMap[i];
+			if (val > max) {
+				max = val;
+			}
+			if (val < min) {
+				min = val;
+			}
+		}
+
+		for (int i = 0; i < width * depth; ++i) {
+			heightMap[i] = ((heightMap[i] - min) / (max - min)) * 100;
+		}
+	}
+
+	void ClassicWorldGenerator::Generate(std::vector<std::shared_ptr<Chunk>>& chunks, int seed)
 	{
 		const Uint32 width = World::size.x * Chunk::size.x;
 		const Uint32 depth = World::size.z * Chunk::size.z;
 		Uint32 *heightMap = new Uint32[width * depth];
-		GenerateHeightmap(heightMap, width, depth);
+		GenerateHeightmap(heightMap, width, depth, seed);
 
 		for (int cy = 0; cy < World::size.y; cy++)
 		{
@@ -107,11 +126,27 @@ namespace Voxel
 		delete[] heightMap;
 	}
 
-	void ClassicWorldGenerator::GenerateHeightmap(Uint32* heightMap, Uint32 width, Uint32 depth)
+	void ClassicWorldGenerator::GenerateHeightmap(Uint32* heightMap, Uint32 width, Uint32 depth, int seed)
 	{
-		OctaveNoise continentalnessNoise(4, 0.25f, 4.0f);
-		OctaveNoise erosionNoise(7, 2.0f, 0.7f);
-		OctaveNoise peaksNoise(8, 0.3f, 1.3f);
+		if (continentalnessNoise) {
+			delete continentalnessNoise;
+		}
+
+		if (peaksNoise) {
+			delete peaksNoise;
+		}
+
+		if (erosionNoise) {
+			delete erosionNoise;
+		}
+
+		if (seed == -1) {
+			seed = Random::Next();
+		}
+		
+		continentalnessNoise = new OctaveNoise(4, 0.25f, 4.0f, seed);
+		erosionNoise = new OctaveNoise(7, 2.0f, 0.7f, seed * 2);
+		peaksNoise = new OctaveNoise(8, 0.3f, 1.3f, seed * 3);
 		
 		for (Int32 x = 0; x < width; x++)
 		{
@@ -119,7 +154,7 @@ namespace Voxel
 			{
 				float height = 0.0f;
 				
-				float continentalness = continentalnessNoise.Compute(x, z);
+				float continentalness = continentalnessNoise->Compute(x, z);
 				float continentalHeight = 0.0f;
 				
 				if (continentalness < 0.1)
@@ -154,7 +189,7 @@ namespace Voxel
 				height += continentalHeight / 3.0f;
 
 
-				float erosion = erosionNoise.Compute(x, z);
+				float erosion = erosionNoise->Compute(x, z);
 				float erosionHeight = 0.0f;
 
 				if (erosion < 0.2)
@@ -181,7 +216,7 @@ namespace Voxel
 				height += erosionHeight / 3.0f;
 
 
-				float peaks = peaksNoise.Compute(x, z);
+				float peaks = peaksNoise->Compute(x, z);
 				float peakHeight = 0.0f;
 
 				if (peaks < 0.3)

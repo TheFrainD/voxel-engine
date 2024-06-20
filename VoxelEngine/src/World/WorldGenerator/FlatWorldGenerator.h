@@ -15,7 +15,7 @@ namespace Voxel
 
 		}
 
-		void Generate(std::vector<std::shared_ptr<Chunk>>& chunks) override;
+		void Generate(std::vector<std::shared_ptr<Chunk>>& chunks, int seed = -1) override;
 	};
 
 } // namespace Voxel

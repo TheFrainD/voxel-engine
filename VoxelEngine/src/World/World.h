@@ -24,7 +24,7 @@ namespace Voxel
 		static constexpr Uint32 volume = size.x * size.y * size.z;
 
 		static void Init(const Game* game);
-		static void Regenerate();
+		static void Regenerate(int seed = -1);
 		static void Update();
 		static void Render();
 		static void Destroy();
@@ -35,6 +35,8 @@ namespace Voxel
 		static Block* RayCast(glm::vec3 a, glm::vec3 dir, float max_dist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
 
 		static const std::shared_ptr<Camera3D>& GetCamera();
+
+		static WorldGenerator* GetWorldGenerator() { return _worldGenerator; }
 	private:
 		static std::vector<std::shared_ptr<Chunk>> _chunks;
 		static std::shared_ptr<Camera3D> _camera;

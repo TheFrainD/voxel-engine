@@ -14,6 +14,7 @@
 #include <Graphics/Texture.h>
 #include <UI/UI.h>
 #include <World/World.h>
+#include <World/Noise/Random.h>
 
 #include <glad/glad.h>
 
@@ -93,9 +94,7 @@ namespace Voxel
 		float slider2_1 = 0.0f, slider2_2 = 0.0f, slider2_3 = 0.0f;
 		float slider3_1 = 0.0f, slider3_2 = 0.0f, slider3_3 = 0.0f;
 
-		auto regenerateButtonCallback = []() {
-			World::Regenerate();
-		};
+		int seed = Random::Next();
 
 		float deltaTime = 0;
 		float currentTime = 0;
@@ -131,7 +130,7 @@ namespace Voxel
 			ImGui::SliderFloat("Slider 1.2", &slider1_2, 0.0f, 1.0f);
 			ImGui::SliderFloat("Slider 1.3", &slider1_3, 0.0f, 1.0f);
 			if (ImGui::Button("Button 1")) {
-				regenerateButtonCallback();
+				World::Regenerate(seed);
 			}
 			ImGui::End();
 
@@ -141,7 +140,7 @@ namespace Voxel
 			ImGui::SliderFloat("Slider 2.2", &slider2_2, 0.0f, 1.0f);
 			ImGui::SliderFloat("Slider 2.3", &slider2_3, 0.0f, 1.0f);
 			if (ImGui::Button("Button 2")) {
-				regenerateButtonCallback();
+				World::Regenerate(seed);
 			}
 			ImGui::End();
 
@@ -151,8 +150,15 @@ namespace Voxel
 			ImGui::SliderFloat("Slider 3.2", &slider3_2, 0.0f, 1.0f);
 			ImGui::SliderFloat("Slider 3.3", &slider3_3, 0.0f, 1.0f);
 			if (ImGui::Button("Button 3")) {
-				regenerateButtonCallback();
+				World::Regenerate(seed);
 			}
+
+			ImGui::Begin("Seed");
+			ImGui::InputInt("Enter seed", &seed);
+			if (ImGui::Button("Random")) {
+				seed = Random::Next();
+			}
+
 			ImGui::End();
 
 			// Rendering ImGui

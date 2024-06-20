@@ -85,7 +85,7 @@ public:
 
 	virtual void Destroy() override
 	{
-		
+		World::Destroy();
 	}
 
 private:

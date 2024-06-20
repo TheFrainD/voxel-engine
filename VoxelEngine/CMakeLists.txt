@@ -10,7 +10,7 @@ find_package(OpenGL REQUIRED)
 
 add_subdirectory(vendor)
 
-target_link_libraries(${PROJECT_NAME} imgui FastNoiseLite stb glfw glad glm spdlog::spdlog)
+target_link_libraries(${PROJECT_NAME} imgui FastNoiseLite spline stb glfw glad glm spdlog::spdlog)
 
 add_custom_command(
 	TARGET ${PROJECT_NAME} POST_BUILD

@@ -21,6 +21,10 @@ target_include_directories(stb INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/stb)
 add_library(FastNoiseLite INTERFACE)
 target_include_directories(FastNoiseLite INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/FastNoiseLite/Cpp)
 
+# spline
+add_library(spline INTERFACE)
+target_include_directories(spline INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/spline/src)
+
 # ImGui
 set(IMGUI_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/imgui)
 

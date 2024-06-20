@@ -124,10 +124,10 @@ namespace Voxel
 
 	}
 
-	void World::Regenerate() {
+	void World::Regenerate(int seed) {
 		_chunks.clear();
 
-		_worldGenerator->Generate(_chunks);
+		_worldGenerator->Generate(_chunks, seed);
 
 		for (int cy = 0; cy < size.y; cy++)
 		{
@@ -168,6 +168,7 @@ namespace Voxel
 
 	void World::Destroy()
 	{
+		delete _worldGenerator;
 	}
 
 	std::shared_ptr<Chunk> World::GetChunk(Int32 x, Int32 y, Int32 z)

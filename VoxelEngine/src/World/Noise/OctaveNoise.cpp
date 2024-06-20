@@ -8,8 +8,8 @@
 namespace Voxel
 {
 
-	OctaveNoise::OctaveNoise(Int32 octaves, float persistance, float lacunarity) :
-		octaves(octaves), persistance(persistance), lacunarity(lacunarity)
+	OctaveNoise::OctaveNoise(Int32 octaves, float persistance, float lacunarity, int seed) :
+		perlin(seed), octaves(octaves), persistance(persistance), lacunarity(lacunarity)
 	{
 		
 	}

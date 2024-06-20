@@ -12,7 +12,7 @@ namespace Voxel
 	class PerlinNoise : public Noise
 	{
 	public:
-		PerlinNoise();
+		PerlinNoise(int seed = -1);
 
 		float Compute(float x, float z) override;
 	private:

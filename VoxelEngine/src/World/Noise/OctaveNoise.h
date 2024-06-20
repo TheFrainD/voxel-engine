@@ -11,7 +11,7 @@ namespace Voxel
 	class OctaveNoise : public Noise
 	{
 	public:
-		OctaveNoise(Int32 octaves, float persistance, float lacunarity);
+		OctaveNoise(Int32 octaves, float persistance, float lacunarity, int seed = -1);
 
 		float Compute(float x, float z) override;
 	private:

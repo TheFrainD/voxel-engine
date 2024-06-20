@@ -9,10 +9,13 @@
 
 namespace Voxel
 {
-	PerlinNoise::PerlinNoise()
+	PerlinNoise::PerlinNoise(int seed)
 	{
 		noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-		noise.SetSeed(Random::Next());
+		if (seed == -1) {
+			seed = Random::Next();
+		}
+		noise.SetSeed(seed);
 	}
 
 	float PerlinNoise::Compute(float x, float z)

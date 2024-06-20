@@ -8,7 +8,7 @@
 namespace Voxel
 {
 
-	void FlatWorldGenerator::Generate(std::vector<std::shared_ptr<Chunk>>& chunks)
+	void FlatWorldGenerator::Generate(std::vector<std::shared_ptr<Chunk>>& chunks, int seed)
 	{
 		for (int cy = 0; cy < World::size.y; cy++)
 		{
