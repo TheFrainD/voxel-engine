@@ -15,6 +15,7 @@
 #include <UI/UI.h>
 #include <World/World.h>
 #include <World/Noise/Random.h>
+#include <World/WorldGenerator/ClassicWorldGenerator.h>
 
 #include <glad/glad.h>
 
@@ -76,25 +77,86 @@ namespace Voxel
 
 		Renderer2D::Init();
 
-        const int imgWidth = 256, imgHeight = 256;
-        std::vector<unsigned char> imageBuffer1(imgWidth * imgHeight, 0xFF);
-        std::vector<unsigned char> imageBuffer2(imgWidth * imgHeight, 0x80);
-        std::vector<unsigned char> imageBuffer3(imgWidth * imgHeight, 0x40);
+        const int imgWidth = 128, imgHeight = 128;
+        std::vector<unsigned char> continentalnessImageBuffer(imgWidth * imgHeight * 3, 0);
+        std::vector<unsigned char> erosionImageBuffer(imgWidth * imgHeight * 3, 0);
+        std::vector<unsigned char> peacksImageBuffer(imgWidth * imgHeight * 3, 0);
+
+		auto worldGen = (ClassicWorldGenerator *)World::GetWorldGenerator();
+		{
+			auto continentalnessNoise = worldGen->GetContinentalnessNoise();
+			auto erosionNoise = worldGen->GetErosionNoise();
+			auto peaksNoise = worldGen->GetPeaksNoise();
+
+			for (int i = 0; i < imgWidth * imgHeight; ++i) {
+				unsigned char cont = continentalnessNoise->Compute(i % imgWidth, i / imgWidth) * 255;
+				unsigned char eros = erosionNoise->Compute(i % imgWidth, i / imgWidth) * 255;
+				unsigned char peak = peaksNoise->Compute(i % imgWidth, i / imgWidth) * 255;
+
+				continentalnessImageBuffer[i * 3 + 0]        = cont;  // Red channel
+				continentalnessImageBuffer[i * 3 + 1]        = cont;  // Green channel
+				continentalnessImageBuffer[i * 3 + 2]        = cont;  // Blue channel
+				// continentalnessImageBuffer[i * 3 + 3] 		 = 0;
+
+				erosionImageBuffer[i * 3 + 0]        = eros;  // Red channel
+				erosionImageBuffer[i * 3 + 1]        = eros;  // Green channel
+				erosionImageBuffer[i * 3 + 2]        = eros;  // Blue channel
+				// erosionImageBuffer[i * 3 + 3] 		 = 0;
+
+				peacksImageBuffer[i * 3 + 0]        = peak;  // Red channel
+				peacksImageBuffer[i * 3 + 1]        = peak;  // Green channel
+				peacksImageBuffer[i * 3 + 2]        = peak;  // Blue channel
+				// peacksImageBuffer[i * 3 + 3] 		 = 0;
+		}
+		}
 
         auto texture1 = Texture::Create(imgWidth, imgHeight);
-        texture1->SetData(imageBuffer1.data(), imageBuffer1.size());
+        texture1->SetData(continentalnessImageBuffer.data(), continentalnessImageBuffer.size(), false);
 
         auto texture2 = Texture::Create(imgWidth, imgHeight);
-        texture2->SetData(imageBuffer2.data(), imageBuffer2.size());
+        texture2->SetData(erosionImageBuffer.data(), erosionImageBuffer.size(), false);
 
         auto texture3 = Texture::Create(imgWidth, imgHeight);
-        texture3->SetData(imageBuffer3.data(), imageBuffer3.size());
+        texture3->SetData(peacksImageBuffer.data(), peacksImageBuffer.size(), false);
 
 		float slider1_1 = 0.0f, slider1_2 = 0.0f, slider1_3 = 0.0f;
 		float slider2_1 = 0.0f, slider2_2 = 0.0f, slider2_3 = 0.0f;
 		float slider3_1 = 0.0f, slider3_2 = 0.0f, slider3_3 = 0.0f;
 
 		int seed = Random::Next();
+
+		auto RegenerateWorld = [&](int seed_) {
+			World::Regenerate(seed_);
+
+			auto continentalnessNoise = worldGen->GetContinentalnessNoise();
+			auto erosionNoise = worldGen->GetErosionNoise();
+			auto peaksNoise = worldGen->GetPeaksNoise();
+
+			for (int i = 0; i < imgWidth * imgHeight; ++i) {
+				unsigned char cont = continentalnessNoise->Compute(i % imgWidth, i / imgWidth) * 255;
+				unsigned char eros = erosionNoise->Compute(i % imgWidth, i / imgWidth) * 255;
+				unsigned char peak = peaksNoise->Compute(i % imgWidth, i / imgWidth) * 255;
+
+				continentalnessImageBuffer[i * 3 + 0]        = cont;  // Red channel
+				continentalnessImageBuffer[i * 3 + 1]        = cont;  // Green channel
+				continentalnessImageBuffer[i * 3 + 2]        = cont;  // Blue channel
+				// continentalnessImageBuffer[i * 3 + 3] 		 = 0;
+
+				erosionImageBuffer[i * 3 + 0]        = eros;  // Red channel
+				erosionImageBuffer[i * 3 + 1]        = eros;  // Green channel
+				erosionImageBuffer[i * 3 + 2]        = eros;  // Blue channel
+				// erosionImageBuffer[i * 3 + 3] 		 = 0;
+
+				peacksImageBuffer[i * 3 + 0]        = peak;  // Red channel
+				peacksImageBuffer[i * 3 + 1]        = peak;  // Green channel
+				peacksImageBuffer[i * 3 + 2]        = peak;  // Blue channel
+				// peacksImageBuffer[i * 3 + 3] 		 = 0;
+			}
+
+			texture1->SetData(continentalnessImageBuffer.data(), continentalnessImageBuffer.size(), false);
+			texture2->SetData(erosionImageBuffer.data(), erosionImageBuffer.size(), false);
+			texture3->SetData(peacksImageBuffer.data(), peacksImageBuffer.size(), false);
+		};
 
 		float deltaTime = 0;
 		float currentTime = 0;
@@ -124,39 +186,43 @@ namespace Voxel
 			ImGui::NewFrame();
 
 			// Render ImGui content
-			ImGui::Begin("Image 1 and Sliders");
+			ImGui::Begin("Continentalness");
 			ImGui::Image((void*)(intptr_t)texture1->GetId(), ImVec2((float)imgWidth, (float)imgHeight));
 			ImGui::SliderFloat("Slider 1.1", &slider1_1, 0.0f, 1.0f);
 			ImGui::SliderFloat("Slider 1.2", &slider1_2, 0.0f, 1.0f);
 			ImGui::SliderFloat("Slider 1.3", &slider1_3, 0.0f, 1.0f);
-			if (ImGui::Button("Button 1")) {
-				World::Regenerate(seed);
+			if (ImGui::Button("Apply")) {
+				RegenerateWorld(seed);
 			}
 			ImGui::End();
 
-			ImGui::Begin("Image 2 and Sliders");
+			ImGui::Begin("Erosion");
 			ImGui::Image((void*)(intptr_t)texture2->GetId(), ImVec2((float)imgWidth, (float)imgHeight));
 			ImGui::SliderFloat("Slider 2.1", &slider2_1, 0.0f, 1.0f);
 			ImGui::SliderFloat("Slider 2.2", &slider2_2, 0.0f, 1.0f);
 			ImGui::SliderFloat("Slider 2.3", &slider2_3, 0.0f, 1.0f);
-			if (ImGui::Button("Button 2")) {
-				World::Regenerate(seed);
+			if (ImGui::Button("Apply")) {
+				RegenerateWorld(seed);
 			}
 			ImGui::End();
 
-			ImGui::Begin("Image 3 and Sliders");
+			ImGui::Begin("Peaks");
 			ImGui::Image((void*)(intptr_t)texture3->GetId(), ImVec2((float)imgWidth, (float)imgHeight));
 			ImGui::SliderFloat("Slider 3.1", &slider3_1, 0.0f, 1.0f);
 			ImGui::SliderFloat("Slider 3.2", &slider3_2, 0.0f, 1.0f);
 			ImGui::SliderFloat("Slider 3.3", &slider3_3, 0.0f, 1.0f);
-			if (ImGui::Button("Button 3")) {
-				World::Regenerate(seed);
+			if (ImGui::Button("Apply")) {
+				RegenerateWorld(seed);
 			}
 
 			ImGui::Begin("Seed");
 			ImGui::InputInt("Enter seed", &seed);
 			if (ImGui::Button("Random")) {
 				seed = Random::Next();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Apply")) {
+				RegenerateWorld(seed);
 			}
 
 			ImGui::End();

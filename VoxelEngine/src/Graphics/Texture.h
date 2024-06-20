@@ -16,7 +16,7 @@ namespace Voxel
 		Texture(const std::string& path);
 		Texture(Uint32 width, Uint32 height);
 
-		void SetData(void* data, Uint32 size);
+		void SetData(void* data, Uint32 size, bool alpha = true);
 
 		void Destroy() override;
 
