@@ -124,6 +124,30 @@ namespace Voxel
 
 	}
 
+	void World::Regenerate() {
+		_chunks.clear();
+
+		_worldGenerator->Generate(_chunks);
+
+		for (int cy = 0; cy < size.y; cy++)
+		{
+			for (int cz = 0; cz < size.z; cz++)
+			{
+				for (int cx = 0; cx < size.x; cx++)
+				{
+					std::shared_ptr<Chunk> chunk = GetChunk(cx, cy, cz);
+					chunk->SetNeighbour(Side::Top, GetChunk(cx, cy + 1, cz));
+					chunk->SetNeighbour(Side::Bottom, GetChunk(cx, cy - 1, cz));
+					chunk->SetNeighbour(Side::Front, GetChunk(cx, cy, cz + 1));
+					chunk->SetNeighbour(Side::Back, GetChunk(cx, cy, cz - 1));
+					chunk->SetNeighbour(Side::Right, GetChunk(cx + 1, cy, cz));
+					chunk->SetNeighbour(Side::Left, GetChunk(cx - 1, cy, cz));
+					chunk->GenerateMesh();
+				}
+			}
+		}
+	}
+
 	void World::Update()
 	{	
 	

@@ -25,6 +25,7 @@ namespace Voxel
 
 		Uint32 GetWidth() const { return width; }
 		Uint32 GetHeight() const { return height; }
+		Uint32 GetId() const { return id; }
 
 		bool operator==(const Texture& other) const
 		{

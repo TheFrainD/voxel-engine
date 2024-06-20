@@ -62,10 +62,10 @@ namespace Voxel
 				}
 			}
 
-			if (Input::IsMouseButtonPressed(MouseButton::ButtonLeft))
-			{
-				VE_LOG_INFO("Ray cast end: {} {} {}", iend.x, iend.y, iend.z);
-			}
+			// if (Input::IsMouseButtonPressed(MouseButton::ButtonLeft))
+			// {
+			// 	VE_LOG_INFO("Ray cast end: {} {} {}", iend.x, iend.y, iend.z);
+			// }
 		}
 	}
 

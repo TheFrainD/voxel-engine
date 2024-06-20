@@ -59,6 +59,10 @@ namespace Voxel
 
 	void Camera3D::OnMouseMoved(const Event* event)
 	{
+		if (!isActive) {
+			return;
+		}
+		
 		glm::vec2 deltaPosition = EVENT(MouseMovedEvent)->GetPosition() - EVENT(MouseMovedEvent)->GetLastPosition();
 		deltaPosition.x = CLAMP(deltaPosition.x, -100.0f, 100.0f);
 		deltaPosition.y = CLAMP(deltaPosition.y, -100.0f, 100.0f);

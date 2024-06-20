@@ -24,6 +24,7 @@ namespace Voxel
 		static constexpr Uint32 volume = size.x * size.y * size.z;
 
 		static void Init(const Game* game);
+		static void Regenerate();
 		static void Update();
 		static void Render();
 		static void Destroy();

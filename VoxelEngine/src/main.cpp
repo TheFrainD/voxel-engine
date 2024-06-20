@@ -33,6 +33,16 @@ public:
 
 	virtual void Start() override
 	{
+
+		UI::Add(UIElement::Create(Texture::Create("data/textures/crosshair.png"), { 0.5f, 0.5f }, { 16.0f, 16.0f }));
+
+		Renderer::SetClearColor({ 0.0f, 0.709803f, 0.886274f, 1.0f });
+
+		World::Init(this);
+
+		playerController = PlayerController::Create();
+		playerController->SetCamera(World::GetCamera());
+
 		EventBus::Subscribe<KeyPressedEvent>([this](const Event* event){
 			if (EVENT(KeyPressedEvent)->GetKey() == Key::Escape)
 			{
@@ -48,16 +58,13 @@ public:
 			{
 				window->SetVSync(!window->GetVSync());
 			}
+
+			if (EVENT(KeyPressedEvent)->GetKey() == Key::G)
+			{
+				Input::SetMouseGrabbed(!Input::GetMouseGrabbed());
+				World::GetCamera()->SetActive(!World::GetCamera()->GetActive());
+			}
 		});
-
-		UI::Add(UIElement::Create(Texture::Create("data/textures/crosshair.png"), { 0.5f, 0.5f }, { 16.0f, 16.0f }));
-
-		Renderer::SetClearColor({ 0.0f, 0.709803f, 0.886274f, 1.0f });
-
-		World::Init(this);
-
-		playerController = PlayerController::Create();
-		playerController->SetCamera(World::GetCamera());
 	}
 
 	virtual void Update(float deltaTime) override

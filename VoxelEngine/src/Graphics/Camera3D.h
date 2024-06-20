@@ -25,7 +25,12 @@ namespace Voxel
 		void OnMouseMoved(const Event* event);
 
 		static std::shared_ptr<Camera3D> Create(const Game* game, float fov, float sensitivity);
+
+		void SetActive(bool value = true) { isActive = value; }
+		bool GetActive() const { return isActive; }
 	protected:
+		bool isActive = true;
+
 		float fov;
 		float sensitivity;
 
