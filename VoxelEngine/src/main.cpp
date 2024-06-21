@@ -39,24 +39,28 @@ std::shared_ptr<Texture> texture1;
 std::shared_ptr<Texture> texture2;
 std::shared_ptr<Texture> texture3;
 
-float slider1_1 = 0.0f, slider1_2 = 0.0f, slider1_3 = 0.0f;
-float slider2_1 = 0.0f, slider2_2 = 0.0f, slider2_3 = 0.0f;
-float slider3_1 = 0.0f, slider3_2 = 0.0f, slider3_3 = 0.0f;
+int contOct = 4;
+float contPer = 0.25f;
+float contLac = 4.0f;
+
+int erOct = 7;
+float erPer = 2.0f;
+float erLac = 0.7f;
+
+int peOct = 8;
+float pePer = 0.3f;
+float peLac = 1.3f;
 
 OctaveNoise *continentalnessNoise;
 OctaveNoise *erosionNoise;
 OctaveNoise *peaksNoise;
 
 void RegenerateWorld() {
-	continentalnessNoise = new OctaveNoise(4, 0.25f, 4.0f, seed);
-	erosionNoise = new OctaveNoise(7, 2.0f, 0.7f, seed * 2);
-	peaksNoise = new OctaveNoise(8, 0.3f, 1.3f, seed * 3);
+	continentalnessNoise = new OctaveNoise(contOct, contPer, contLac, seed);
+	erosionNoise = new OctaveNoise(erOct, erPer, erLac, seed * 2);
+	peaksNoise = new OctaveNoise(peOct, pePer, peLac, seed * 3);
 
 	World::Regenerate(continentalnessNoise, erosionNoise, peaksNoise);
-
-	auto continentalnessNoise = worldGen->GetContinentalnessNoise();
-	auto erosionNoise = worldGen->GetErosionNoise();
-	auto peaksNoise = worldGen->GetPeaksNoise();
 
 	for (int i = 0; i < imgWidth * imgHeight; ++i) {
 		unsigned char cont = continentalnessNoise->Compute(i % imgWidth, i / imgWidth) * 255;
@@ -84,6 +88,48 @@ void RegenerateWorld() {
 	texture3->SetData(peacksImageBuffer.data(), peacksImageBuffer.size(), false);
 }
 
+void UpdateCont() {
+	continentalnessNoise = new OctaveNoise(contOct, contPer, contLac, seed);
+
+	for (int i = 0; i < imgWidth * imgHeight; ++i) {
+		unsigned char cont = continentalnessNoise->Compute(i % imgWidth, i / imgWidth) * 255;
+
+		continentalnessImageBuffer[i * 3 + 0]        = cont;  // Red channel
+		continentalnessImageBuffer[i * 3 + 1]        = cont;  // Green channel
+		continentalnessImageBuffer[i * 3 + 2]        = cont;  // Blue channel
+	}
+
+	texture1->SetData(continentalnessImageBuffer.data(), continentalnessImageBuffer.size(), false);
+}
+
+void UpdateErr() {
+	erosionNoise = new OctaveNoise(erOct, erPer, erLac, seed * 2);
+
+	for (int i = 0; i < imgWidth * imgHeight; ++i) {
+		unsigned char eros = erosionNoise->Compute(i % imgWidth, i / imgWidth) * 255;
+
+		erosionImageBuffer[i * 3 + 0]        = eros;  // Red channel
+		erosionImageBuffer[i * 3 + 1]        = eros;  // Green channel
+		erosionImageBuffer[i * 3 + 2]        = eros;  // Blue channel
+	}
+
+	texture2->SetData(erosionImageBuffer.data(), erosionImageBuffer.size(), false);
+}
+
+void UpdatePeak() {
+	peaksNoise = new OctaveNoise(peOct, pePer, peLac, seed * 3);
+
+	for (int i = 0; i < imgWidth * imgHeight; ++i) {
+		unsigned char peak = peaksNoise->Compute(i % imgWidth, i / imgWidth) * 255;
+
+		peacksImageBuffer[i * 3 + 0]        = peak;  // Red channel
+		peacksImageBuffer[i * 3 + 1]        = peak;  // Green channel
+		peacksImageBuffer[i * 3 + 2]        = peak;  // Blue channel
+	}
+
+	texture3->SetData(peacksImageBuffer.data(), peacksImageBuffer.size(), false);
+}
+
 class VoxelEngine : public Game
 {
 public:
@@ -106,9 +152,9 @@ public:
 
 		seed = Random::Next();
 
-		continentalnessNoise = new OctaveNoise(4, 0.25f, 4.0f, seed);
-		erosionNoise = new OctaveNoise(7, 2.0f, 0.7f, seed * 2);
-		peaksNoise = new OctaveNoise(8, 0.3f, 1.3f, seed * 3);
+		continentalnessNoise = new OctaveNoise(contOct, contPer, contLac, seed);
+		erosionNoise = new OctaveNoise(erOct, erPer, erLac, seed * 2);
+		peaksNoise = new OctaveNoise(peOct, pePer, peLac, seed * 3);
 
 		World::Init(this, continentalnessNoise, erosionNoise, peaksNoise);
 
@@ -193,9 +239,15 @@ public:
 		// Render ImGui content
 		ImGui::Begin("Continentalness");
 		ImGui::Image((void*)(intptr_t)texture1->GetId(), ImVec2((float)imgWidth, (float)imgHeight));
-		ImGui::SliderFloat("Slider 1.1", &slider1_1, 0.0f, 1.0f);
-		ImGui::SliderFloat("Slider 1.2", &slider1_2, 0.0f, 1.0f);
-		ImGui::SliderFloat("Slider 1.3", &slider1_3, 0.0f, 1.0f);
+		if (ImGui::InputInt("Octaves", &contOct)) {
+			UpdateCont();
+		}
+		if (ImGui::SliderFloat("Persistence", &contPer, 0.0f, 1.0f)) {
+			UpdateCont();
+		}
+		if (ImGui::SliderFloat("Lacunarity", &contLac, 0.0f, 10.0f)) {
+			UpdateCont();
+		}
 		if (ImGui::Button("Apply")) {
 			RegenerateWorld();
 		}
@@ -203,9 +255,15 @@ public:
 
 		ImGui::Begin("Erosion");
 		ImGui::Image((void*)(intptr_t)texture2->GetId(), ImVec2((float)imgWidth, (float)imgHeight));
-		ImGui::SliderFloat("Slider 2.1", &slider2_1, 0.0f, 1.0f);
-		ImGui::SliderFloat("Slider 2.2", &slider2_2, 0.0f, 1.0f);
-		ImGui::SliderFloat("Slider 2.3", &slider2_3, 0.0f, 1.0f);
+		if (ImGui::InputInt("Octaves", &erOct)) {
+			UpdateErr();
+		}
+		if (ImGui::SliderFloat("Persistence", &erPer, 0.0f, 1.0f)) {
+			UpdateErr();
+		}
+		if (ImGui::SliderFloat("Lacunarity", &erLac, 0.0f, 10.0f)) {
+			UpdateErr();
+		}
 		if (ImGui::Button("Apply")) {
 			RegenerateWorld();
 		}
@@ -213,9 +271,15 @@ public:
 
 		ImGui::Begin("Peaks");
 		ImGui::Image((void*)(intptr_t)texture3->GetId(), ImVec2((float)imgWidth, (float)imgHeight));
-		ImGui::SliderFloat("Slider 3.1", &slider3_1, 0.0f, 1.0f);
-		ImGui::SliderFloat("Slider 3.2", &slider3_2, 0.0f, 1.0f);
-		ImGui::SliderFloat("Slider 3.3", &slider3_3, 0.0f, 1.0f);
+		if (ImGui::InputInt("Octaves", &peOct)) {
+			UpdatePeak();
+		}
+		if (ImGui::SliderFloat("Persistence", &pePer, 0.0f, 1.0f)) {
+			UpdatePeak();
+		}
+		if (ImGui::SliderFloat("Lacunarity", &peLac, 0.0f, 10.0f)) {
+			UpdatePeak();
+		}
 		if (ImGui::Button("Apply")) {
 			RegenerateWorld();
 		}
