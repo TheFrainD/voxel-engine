@@ -39,17 +39,17 @@ std::shared_ptr<Texture> texture1;
 std::shared_ptr<Texture> texture2;
 std::shared_ptr<Texture> texture3;
 
-int contOct = 4;
-float contPer = 0.25f;
-float contLac = 4.0f;
+int contOct = 8;
+float contPer = 0.5f;
+float contLac = 2.0f;
 
-int erOct = 7;
-float erPer = 2.0f;
-float erLac = 0.7f;
+int erOct = 3;
+float erPer = 0.9f;
+float erLac = 2.0f;
 
-int peOct = 8;
-float pePer = 0.3f;
-float peLac = 1.3f;
+int peOct = 3;
+float pePer = 0.8f;
+float peLac = 1.5f;
 
 OctaveNoise *continentalnessNoise;
 OctaveNoise *erosionNoise;

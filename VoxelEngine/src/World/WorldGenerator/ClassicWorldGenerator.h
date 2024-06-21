@@ -37,7 +37,7 @@ namespace Voxel
 		OctaveNoise *GetErosionNoise() { return erosionNoise; }
 		OctaveNoise *GetPeaksNoise() { return peaksNoise; }
 	private:
-		void GenerateHeightmap(Uint32* heightMap, Uint32 width, Uint32 depth);
+		void GenerateHeightmap(std::vector<float> &heightMap, Uint32 width, Uint32 depth);
 
 		Uint32 waterLevel = 32;
 		OctaveNoise *continentalnessNoise;

@@ -40,7 +40,7 @@ namespace Voxel
 		
 		const Uint32 width = World::size.x * Chunk::size.x;
 		const Uint32 depth = World::size.z * Chunk::size.z;
-		Uint32 *heightMap = new Uint32[width * depth];
+		std::vector<float> heightMap(width * depth, 0.0f);
 		GenerateHeightmap(heightMap, width, depth);
 
 		for (int cy = 0; cy < World::size.y; cy++)
@@ -130,109 +130,62 @@ namespace Voxel
 				}
 			}
 		}
-
-		delete[] heightMap;
 	}
 
-	void ClassicWorldGenerator::GenerateHeightmap(Uint32* heightMap, Uint32 width, Uint32 depth)
+	void ClassicWorldGenerator::GenerateHeightmap(std::vector<float> &heightMap, Uint32 width, Uint32 depth)
 	{	
+		std::vector<double> continentalnessX = {0.0, 0.3, 0.45, 0.5, 0.6, 0.63, 0.8, 1.0};
+   	std::vector<double> continentalnessY = {0.0, 0.2, 0.4, 0.4, 0.65, 0.68, 0.69, 0.65};
+		tk::spline continentalnessSpline(continentalnessX, continentalnessY);
+
+		std::vector<double> erosionX = {0.0, 0.15, 0.4, 0.5, 0.6, 0.75, 0.85, 0.95, 1.0};
+   		std::vector<double> erosionY = {0.8, 0.55, 0.45, 0.55, 0.18, 0.15, 0.35, 0.02};
+		tk::spline erosionSpline(erosionX, erosionY);
+
+		std::vector<double> peaksX = {0.125, 0.3, 0.49, 0.75, 0.85, 0.95};
+   		std::vector<double> peaksY = {0.02, 0.09, 0.24, 0.81, 0.91, 0.89};
+		tk::spline peaksSpline(peaksX, peaksY);
+		
 		for (Int32 x = 0; x < width; x++)
 		{
 			for (Int32 z = 0; z < depth; z++)
 			{
-				float height = 0.0f;
-				
-				float continentalness = continentalnessNoise->Compute(x, z);
-				float continentalHeight = 0.0f;
-				
-				if (continentalness < 0.1)
-				{
-					continentalHeight = LERP(120, 20, INVERSE_LERP(0.0, 0.1, continentalness));
-				}
-				else if (continentalness < 0.3)
-				{
-					continentalHeight = LERP(20, 35, INVERSE_LERP(0.1, 0.3, continentalness));
-				}
-				else if (continentalness < 0.4)
-				{
-					continentalHeight = LERP(35, 50, INVERSE_LERP(0.3, 0.4, continentalness));
-				}
-				else if (continentalness < 0.5)
-				{
-					continentalHeight = LERP(50, 55, INVERSE_LERP(0.4, 0.5, continentalness));
-				}
-				else if (continentalness < 0.65)
-				{
-					continentalHeight = LERP(50, 90, INVERSE_LERP(0.5, 0.65, continentalness));
-				}
-				else if (continentalness < 0.75)
-				{
-					continentalHeight = LERP(90, 100, INVERSE_LERP(0.65, 0.75, continentalness));
-				}
-				else
-				{
-					continentalHeight = LERP(100, 120, INVERSE_LERP(0.75, 1.0, continentalness));
-				}
+				float continentalnessFactor = continentalnessNoise->Compute(x / 2.0f, z / 2.0f);
+				float continentalness = continentalnessSpline(continentalnessFactor);
+				continentalness = powf(continentalness * 1.2f, 1.5f) / powf(1.2f, 1.5f);
+				// continentalness = 0.1f + continentalness * (0.7f - 0.1f);
 
-				height += continentalHeight / 3.0f;
+				float erosionFactor = erosionNoise->Compute(x / 3.0f, z / 3.0f);
+				float erosion = erosionSpline(erosionFactor);
+				erosion = powf(erosion * 1.2f, 3.5f) / powf(1.2f, 3.5f);
+				erosion = 0.3f + erosion * (0.8f - 0.3f);
 
+				float peaksFactor = peaksNoise->Compute(x * 2.0f, z * 2.0f);
+				float peaks = peaksSpline(peaksFactor);
+				peaks = powf(peaks * 1.2f, 4.5f) / powf(1.2f, 4.5f);
 
-				float erosion = erosionNoise->Compute(x, z);
-				float erosionHeight = 0.0f;
+				float height;
 
-				if (erosion < 0.2)
-				{
-					erosionHeight = LERP(120, 80, INVERSE_LERP(0.0, 0.2, erosion));
+				if (continentalnessFactor <= 0.2f){
+					if (continentalness / erosion > continentalness) {
+						height = LERP(continentalness, continentalness / erosion, INVERSE_LERP(0.0f, 0.2f, continentalnessFactor));
+					} else {
+						height = LERP(continentalness / erosion, continentalness, INVERSE_LERP(0.0f, 0.2f, continentalnessFactor));
+					}
+				} else {
+					height = continentalness / erosion;
+					if (erosionFactor <= 0.7f) {
+						height = LERP(height * peaks, height, INVERSE_LERP(0.0f, 0.7f, erosionFactor));
+					} else {
+						height *= peaks;
+					}
 				}
-				else if (erosion < 0.4)
-				{
-					erosionHeight = LERP(80, 50, INVERSE_LERP(0.2, 0.4, erosion));
-				}
-				else if (erosion < 0.5)
-				{
-					erosionHeight = LERP(50, 20, INVERSE_LERP(0.4, 0.5, erosion));
-				}
-				else if (erosion < 0.7)
-				{
-					erosionHeight = LERP(20, 10, INVERSE_LERP(0.5, 0.7, erosion));
-				}
-				else
-				{
-					erosionHeight = LERP(10, 5, INVERSE_LERP(0.7, 1.0, erosion));
-				}
-
-				height += erosionHeight / 3.0f;
-
-
-				float peaks = peaksNoise->Compute(x, z);
-				float peakHeight = 0.0f;
-
-				if (peaks < 0.3)
-				{
-					peakHeight = LERP(5, 10, INVERSE_LERP(0.0, 0.3, peaks));
-				}
-				else if (peaks < 0.5)
-				{
-					peakHeight = LERP(10, 25, INVERSE_LERP(0.3, 0.5, peaks));
-				}
-				else if (peaks < 0.7)
-				{
-					peakHeight = LERP(25, 75, INVERSE_LERP(0.5, 0.7, peaks));
-				}
-				else if (peaks < 0.8)
-				{
-					peakHeight = LERP(75, 90, INVERSE_LERP(0.7, 0.8, peaks));
-				}
-				else
-				{
-					peakHeight = LERP(90, 120, INVERSE_LERP(0.8, 1.0, peaks));
-				}
-
-				height += peakHeight / 3.0f;
 
 				heightMap[x + z * width] = height;
 			}
 		}
+
+		Normalize(heightMap, width, depth);
 	}
 
 } // namespace Voxel
