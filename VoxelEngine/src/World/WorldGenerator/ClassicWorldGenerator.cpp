@@ -28,12 +28,20 @@ namespace Voxel
 		}
 	}
 
-	void ClassicWorldGenerator::Generate(std::vector<std::shared_ptr<Chunk>>& chunks, int seed)
+	void ClassicWorldGenerator::Generate(std::vector<std::shared_ptr<Chunk>>& chunks, int seed) {
+
+	}
+
+	void ClassicWorldGenerator::Generate(std::vector<std::shared_ptr<Chunk>>& chunks, OctaveNoise *continentalnessNoise_, OctaveNoise *erosionNoise_, OctaveNoise *peaksNoise_)
 	{
+		continentalnessNoise = continentalnessNoise_;
+		erosionNoise = erosionNoise_;
+		peaksNoise = peaksNoise_;
+		
 		const Uint32 width = World::size.x * Chunk::size.x;
 		const Uint32 depth = World::size.z * Chunk::size.z;
 		Uint32 *heightMap = new Uint32[width * depth];
-		GenerateHeightmap(heightMap, width, depth, seed);
+		GenerateHeightmap(heightMap, width, depth);
 
 		for (int cy = 0; cy < World::size.y; cy++)
 		{
@@ -126,28 +134,8 @@ namespace Voxel
 		delete[] heightMap;
 	}
 
-	void ClassicWorldGenerator::GenerateHeightmap(Uint32* heightMap, Uint32 width, Uint32 depth, int seed)
-	{
-		if (continentalnessNoise) {
-			delete continentalnessNoise;
-		}
-
-		if (peaksNoise) {
-			delete peaksNoise;
-		}
-
-		if (erosionNoise) {
-			delete erosionNoise;
-		}
-
-		if (seed == -1) {
-			seed = Random::Next();
-		}
-		
-		continentalnessNoise = new OctaveNoise(4, 0.25f, 4.0f, seed);
-		erosionNoise = new OctaveNoise(7, 2.0f, 0.7f, seed * 2);
-		peaksNoise = new OctaveNoise(8, 0.3f, 1.3f, seed * 3);
-		
+	void ClassicWorldGenerator::GenerateHeightmap(Uint32* heightMap, Uint32 width, Uint32 depth)
+	{	
 		for (Int32 x = 0; x < width; x++)
 		{
 			for (Int32 z = 0; z < depth; z++)

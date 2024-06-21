@@ -43,8 +43,16 @@ float slider1_1 = 0.0f, slider1_2 = 0.0f, slider1_3 = 0.0f;
 float slider2_1 = 0.0f, slider2_2 = 0.0f, slider2_3 = 0.0f;
 float slider3_1 = 0.0f, slider3_2 = 0.0f, slider3_3 = 0.0f;
 
+OctaveNoise *continentalnessNoise;
+OctaveNoise *erosionNoise;
+OctaveNoise *peaksNoise;
+
 void RegenerateWorld() {
-	World::Regenerate(seed);
+	continentalnessNoise = new OctaveNoise(4, 0.25f, 4.0f, seed);
+	erosionNoise = new OctaveNoise(7, 2.0f, 0.7f, seed * 2);
+	peaksNoise = new OctaveNoise(8, 0.3f, 1.3f, seed * 3);
+
+	World::Regenerate(continentalnessNoise, erosionNoise, peaksNoise);
 
 	auto continentalnessNoise = worldGen->GetContinentalnessNoise();
 	auto erosionNoise = worldGen->GetErosionNoise();
@@ -70,7 +78,6 @@ void RegenerateWorld() {
 		peacksImageBuffer[i * 3 + 2]        = peak;  // Blue channel
 		// peacksImageBuffer[i * 3 + 3] 		 = 0;
 	}
-	VE_LOG_CRITICAL("HERE4");
 
 	texture1->SetData(continentalnessImageBuffer.data(), continentalnessImageBuffer.size(), false);
 	texture2->SetData(erosionImageBuffer.data(), erosionImageBuffer.size(), false);
@@ -99,7 +106,11 @@ public:
 
 		seed = Random::Next();
 
-		World::Init(this);
+		continentalnessNoise = new OctaveNoise(4, 0.25f, 4.0f, seed);
+		erosionNoise = new OctaveNoise(7, 2.0f, 0.7f, seed * 2);
+		peaksNoise = new OctaveNoise(8, 0.3f, 1.3f, seed * 3);
+
+		World::Init(this, continentalnessNoise, erosionNoise, peaksNoise);
 
 		playerController = PlayerController::Create();
 		playerController->SetCamera(World::GetCamera());

@@ -26,9 +26,9 @@ namespace Voxel
 
 	std::vector<std::shared_ptr<Chunk>> World::_chunks;
 	std::shared_ptr<Camera3D> World::_camera;
-	WorldGenerator* World::_worldGenerator;
+	ClassicWorldGenerator* World::_worldGenerator;
 
-	void World::Init(const Game* game)
+	void World::Init(const Game* game, OctaveNoise *continentalnessNoise_, OctaveNoise *erosionNoise_, OctaveNoise *peaksNoise_)
 	{
 		_camera = Camera3D::Create(game, 60.0f, 0.02f);
 		_camera->SetPosition({ 0.0f, 70.0f, 0.0f });
@@ -98,7 +98,7 @@ namespace Voxel
 		//	}
 		//}
 
-		_worldGenerator->Generate(_chunks);
+		_worldGenerator->Generate(_chunks, continentalnessNoise_, erosionNoise_, peaksNoise_);
 
 		for (int cy = 0; cy < size.y; cy++)
 		{
@@ -124,10 +124,10 @@ namespace Voxel
 
 	}
 
-	void World::Regenerate(int seed) {
+	void World::Regenerate(OctaveNoise *continentalnessNoise_, OctaveNoise *erosionNoise_, OctaveNoise *peaksNoise_) {
 		_chunks.clear();
 
-		_worldGenerator->Generate(_chunks, seed);
+		_worldGenerator->Generate(_chunks, continentalnessNoise_, erosionNoise_, peaksNoise_);
 
 		for (int cy = 0; cy < size.y; cy++)
 		{

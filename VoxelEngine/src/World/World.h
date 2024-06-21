@@ -7,7 +7,7 @@
 #include <World/Block.h>
 #include <World/Chunk/Chunk.h>
 #include <World/Chunk/ChunkMesh.h>
-#include <World/WorldGenerator/WorldGenerator.h>
+#include <World/WorldGenerator/ClassicWorldGenerator.h>
 
 #include <memory>
 #include <vector>
@@ -23,8 +23,8 @@ namespace Voxel
 		static constexpr glm::ivec3 size = glm::ivec3(8, 1, 8);
 		static constexpr Uint32 volume = size.x * size.y * size.z;
 
-		static void Init(const Game* game);
-		static void Regenerate(int seed = -1);
+		static void Init(const Game* game, OctaveNoise *continentalnessNoise_, OctaveNoise *erosionNoise_, OctaveNoise *peaksNoise_);
+		static void Regenerate(OctaveNoise *continentalnessNoise_, OctaveNoise *erosionNoise_, OctaveNoise *peaksNoise_);
 		static void Update();
 		static void Render();
 		static void Destroy();
@@ -36,11 +36,11 @@ namespace Voxel
 
 		static const std::shared_ptr<Camera3D>& GetCamera();
 
-		static WorldGenerator* GetWorldGenerator() { return _worldGenerator; }
+		static ClassicWorldGenerator* GetWorldGenerator() { return _worldGenerator; }
 	private:
 		static std::vector<std::shared_ptr<Chunk>> _chunks;
 		static std::shared_ptr<Camera3D> _camera;
-		static WorldGenerator* _worldGenerator;
+		static ClassicWorldGenerator* _worldGenerator;
 	};
 
 } // namespace Voxel

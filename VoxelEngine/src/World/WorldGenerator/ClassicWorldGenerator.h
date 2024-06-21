@@ -31,12 +31,13 @@ namespace Voxel
 		}
 
 		void Generate(std::vector<std::shared_ptr<Chunk>>& chunks, int seed = -1) override;
+		void Generate(std::vector<std::shared_ptr<Chunk>>& chunks, OctaveNoise *continentalnessNoise_, OctaveNoise *erosionNoise_, OctaveNoise *peaksNoise_);
 
 		OctaveNoise *GetContinentalnessNoise() { return continentalnessNoise; }
 		OctaveNoise *GetErosionNoise() { return erosionNoise; }
 		OctaveNoise *GetPeaksNoise() { return peaksNoise; }
 	private:
-		void GenerateHeightmap(Uint32* heightMap, Uint32 width, Uint32 depth, int seed = -1);
+		void GenerateHeightmap(Uint32* heightMap, Uint32 width, Uint32 depth);
 
 		Uint32 waterLevel = 32;
 		OctaveNoise *continentalnessNoise;
